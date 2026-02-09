@@ -1,0 +1,694 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* BattleCorp Design System
+   Colors: Black, Cyan, White, Orange
+   Theme: Cyberpunk, Sober, Professional
+*/
+
+@layer base {
+  :root {
+    /* Animation tokens */
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 400ms;
+    --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+    /* Core backgrounds */
+    --background: 240 10% 5%;
+    --foreground: 0 0% 95%;
+
+    /* Cards & surfaces */
+    --card: 240 10% 8%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Primary: Cyan */
+    --primary: 190 100% 50%;
+    --primary-foreground: 240 10% 5%;
+
+    /* Secondary: Muted surface */
+    --secondary: 240 8% 12%;
+    --secondary-foreground: 0 0% 85%;
+
+    /* Muted */
+    --muted: 240 8% 15%;
+    --muted-foreground: 240 5% 55%;
+
+    /* Accent: Orange */
+    --accent: 18 100% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & inputs */
+    --border: 240 8% 18%;
+    --input: 240 8% 18%;
+    --ring: 190 100% 50%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar-background: 240 10% 6%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 190 100% 50%;
+    --sidebar-primary-foreground: 240 10% 5%;
+    --sidebar-accent: 240 8% 12%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 240 8% 18%;
+    --sidebar-ring: 190 100% 50%;
+
+    /* CTA Button tokens */
+    --cta: 26 80% 48%;
+    --cta-hi: 32 92% 60%;
+    --cta-lo: 18 78% 38%;
+    --cta-foreground: 0 0% 100%;
+    --cta2: var(--primary);
+    /* Secondary CTA text+icon should be cyan */
+    --cta2-foreground: var(--primary);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+  }
+
+  /* Focus visible for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-primary/30 text-foreground;
+  }
+}
+
+@layer components {
+  /* Container */
+  .container-bc {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section spacing */
+  .section-py {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  /* Text styles */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Gradient text */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-accent {
+    @apply bg-gradient-to-r from-accent to-accent/80 bg-clip-text text-transparent;
+  }
+
+  /* Layout grid utilities (standard pour les nouvelles sections) */
+  .layout-grid {
+    @apply grid grid-cols-12 gap-6 md:gap-8;
+  }
+
+  .layout-grid-2 {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8;
+  }
+
+  /* ========================================
+     GLASSMORPHISM SYSTEM
+     ======================================== */
+
+  .glass-sm {
+    @apply bg-background/40 backdrop-blur-sm border border-border/50;
+  }
+
+  .glass-md {
+    @apply bg-background/50 backdrop-blur-md border border-border/50;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-lg {
+    @apply bg-background/60 backdrop-blur-xl border border-border/50;
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.08),
+      0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ========================================
+     GLOW EFFECTS
+     ======================================== */
+
+  .glow-primary {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.4);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.4);
+  }
+
+  .glow-primary-intense {
+    box-shadow:
+      0 0 20px hsl(var(--primary) / 0.3),
+      0 0 40px hsl(var(--primary) / 0.2),
+      0 0 60px hsl(var(--primary) / 0.1);
+  }
+
+  .glow-accent-intense {
+    box-shadow:
+      0 0 20px hsl(var(--accent) / 0.3),
+      0 0 40px hsl(var(--accent) / 0.2),
+      0 0 60px hsl(var(--accent) / 0.1);
+  }
+
+  /* ========================================
+     ANIMATED BORDERS
+     ======================================== */
+
+  .border-glow-primary {
+    @apply border border-primary/30;
+    box-shadow:
+      0 0 10px hsl(var(--primary) / 0.2),
+      inset 0 0 10px hsl(var(--primary) / 0.05);
+  }
+
+  .border-glow-accent {
+    @apply border border-accent/30;
+    box-shadow:
+      0 0 10px hsl(var(--accent) / 0.2),
+      inset 0 0 10px hsl(var(--accent) / 0.05);
+  }
+
+  /* ========================================
+     PREMIUM TRANSITIONS
+     ======================================== */
+
+  .transition-premium {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-bounce {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* ========================================
+     LEGACY UTILITIES (maintained for compatibility)
+     ======================================== */
+
+  /* Glow effect - primary color (legacy) */
+  .glow-primary-legacy {
+    @apply shadow-[0_0_20px_-5px] shadow-primary/40;
+  }
+
+  /* Glassmorphism (legacy) */
+  .glass {
+    @apply bg-background/60 backdrop-blur-md border border-border/50;
+  }
+
+  /* GPU acceleration hint for critical animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+  }
+
+  /* ========================================
+     CTA BUTTON SYSTEM (AAA)
+     ======================================== */
+
+  /* Base */
+  .btn-bc {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    letter-spacing: 0.01em;
+    transform: translateZ(0);
+    will-change: transform, filter, box-shadow;
+    user-select: none;
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-normal) var(--ease-out),
+      filter var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  /* Sizes */
+  .btn-bc--sm {
+    min-height: 38px;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-bc--md {
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .btn-bc--lg {
+    min-height: 50px;
+    padding: 0.9rem 1.4rem;
+    font-size: 1rem;
+  }
+
+  .btn-bc .btn-icon {
+    opacity: 0.9;
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .btn-bc:hover .btn-icon {
+    transform: translateX(1px);
+    opacity: 1;
+  }
+
+  /* PRIMARY CTA — Premium Amber (AAA finish) */
+  .btn-cta-primary {
+    --_lift: -1px;
+    color: hsl(var(--cta-foreground));
+    background: linear-gradient(180deg, hsl(var(--cta-hi)) 0%, hsl(var(--cta)) 56%, hsl(var(--cta-lo)) 100%);
+    border: 1px solid hsl(var(--cta) / 0.62);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 14px 34px rgba(0, 0, 0, 0.6),
+      0 0 26px hsl(var(--cta) / 0.18);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+
+  .btn-cta-primary::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: radial-gradient(120% 80% at 18% 12%, rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0) 58%);
+    opacity: 0.78;
+    pointer-events: none;
+  }
+
+  /* Shine: start off-canvas + param skew to avoid snap */
+  .btn-cta-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    --shine-skew: -20deg;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+    transform: translateX(-120%) skewX(var(--shine-skew));
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .btn-cta-primary:hover {
+    transform: translateY(var(--_lift));
+    filter: brightness(1.03) saturate(1.06);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 18px 44px rgba(0, 0, 0, 0.68),
+      0 0 38px hsl(var(--cta) / 0.22);
+  }
+
+  .btn-cta-primary:hover::after {
+    opacity: 0.78;
+    animation: shine-sweep 0.8s var(--ease-out);
+  }
+
+  .btn-cta-primary:active {
+    transform: translateY(0);
+    filter: brightness(0.99);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 12px 28px rgba(0, 0, 0, 0.7),
+      0 0 20px hsl(var(--cta) / 0.16);
+  }
+
+  .btn-cta-primary:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px hsl(var(--primary) / 0.75),
+      0 0 0 6px hsl(var(--background) / 0.92),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 18px 44px rgba(0, 0, 0, 0.68),
+      0 0 38px hsl(var(--cta) / 0.22);
+  }
+
+  /* Header calming for small primary */
+  .btn-bc--sm.btn-cta-primary {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 12px 28px rgba(0, 0, 0, 0.55),
+      0 0 18px hsl(var(--cta) / 0.14);
+  }
+
+  /* SECONDARY CTA — Premium Cyan (text+icon cyan) */
+  .btn-cta-secondary {
+    color: hsl(var(--cta2-foreground));
+    text-shadow: 0 0 14px hsl(var(--primary) / 0.18);
+    background: linear-gradient(180deg, hsl(var(--foreground) / 0.02) 0%, hsl(var(--primary) / 0.06) 100%);
+    border: 1px solid hsl(var(--primary) / 0.32);
+    box-shadow:
+      inset 0 0 0 1px hsl(var(--primary) / 0.06),
+      inset 0 10px 24px rgba(0, 0, 0, 0.25),
+      0 10px 24px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+
+  .btn-cta-secondary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 20% 15%, hsl(var(--primary) / 0.18) 0%, transparent 55%);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  /* Shine: keep secondary skew (-18deg) without snapping */
+  .btn-cta-secondary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    height: 100%;
+    --shine-skew: -18deg;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.28), transparent);
+    transform: translateX(-120%) skewX(var(--shine-skew));
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .btn-cta-secondary:hover {
+    transform: translateY(-1px);
+    border-color: hsl(var(--primary) / 0.5);
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--primary) / 0.06) 100%);
+    box-shadow:
+      inset 0 0 0 1px hsl(var(--primary) / 0.1),
+      0 14px 32px rgba(0, 0, 0, 0.62),
+      0 0 26px hsl(var(--primary) / 0.18);
+  }
+
+  .btn-cta-secondary:hover::after {
+    opacity: 0.85;
+    animation: shine-sweep 0.9s var(--ease-out);
+  }
+
+  .btn-cta-secondary:active {
+    transform: translateY(0);
+    border-color: hsl(var(--primary) / 0.42);
+    box-shadow:
+      inset 0 0 0 1px hsl(var(--primary) / 0.1),
+      0 10px 22px rgba(0, 0, 0, 0.65),
+      0 0 18px hsl(var(--primary) / 0.14);
+  }
+
+  .btn-cta-secondary:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px hsl(var(--primary) / 0.75),
+      0 0 0 6px hsl(var(--background) / 0.92),
+      inset 0 0 0 1px hsl(var(--primary) / 0.1),
+      0 14px 32px rgba(0, 0, 0, 0.62),
+      0 0 26px hsl(var(--primary) / 0.18);
+  }
+
+  /* Reduced motion for CTAs */
+  @media (prefers-reduced-motion: reduce) {
+    .btn-bc,
+    .btn-cta-primary,
+    .btn-cta-secondary {
+      transition: none !important;
+    }
+
+    .btn-cta-primary:hover,
+    .btn-cta-secondary:hover {
+      transform: none !important;
+    }
+
+    .btn-cta-primary:hover::after,
+    .btn-cta-secondary:hover::after {
+      animation: none !important;
+      opacity: 0.6;
+    }
+  }
+}
+
+/* ========================================
+   KEYFRAME ANIMATIONS
+   ======================================== */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
+  }
+}
+
+/* Shine sweep: starts off-canvas and keeps per-button skew via --shine-skew */
+@keyframes shine-sweep {
+  0% {
+    transform: translateX(-120%) skewX(var(--shine-skew, -20deg));
+  }
+  100% {
+    transform: translateX(320%) skewX(var(--shine-skew, -20deg));
+  }
+}
+
+@keyframes border-glow {
+  0%,
+  100% {
+    border-color: hsl(var(--primary) / 0.3);
+  }
+  50% {
+    border-color: hsl(var(--primary) / 0.6);
+  }
+}
+
+@keyframes traveling-light {
+  0% {
+    left: -10%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 110%;
+    opacity: 0;
+  }
+}
+
+@keyframes slide-indicator {
+  0% {
+    transform: translateX(var(--from-x, 0));
+  }
+  100% {
+    transform: translateX(var(--to-x, 0));
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+.animate-shine {
+  animation: shine-sweep 0.8s ease-out;
+}
+
+.animate-border-glow {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* ========================================
+   FLOATING PARTICLES (Hero Section)
+   ======================================== */
+
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-100px) translateX(20px);
+    opacity: 0.4;
+  }
+  90% {
+    opacity: 0.2;
+  }
+}
+
+.animate-float-particle {
+  animation: float-particle 8s ease-in-out infinite;
+}
+
+/* ========================================
+   SCROLL INDICATOR (HUD Style)
+   ======================================== */
+
+.scroll-indicator-dot {
+  animation: scroll-dot-fall 1.35s ease-in-out infinite;
+}
+
+.scroll-indicator-chevron path {
+  animation: scroll-chevron 1.35s ease-in-out infinite;
+}
+
+.scroll-indicator-label {
+  @apply px-3 py-1.5 rounded-full;
+  border: 1px solid hsl(var(--primary) / 0.24);
+  background: linear-gradient(90deg, hsl(var(--primary) / 0.12), hsl(var(--foreground) / 0.01));
+  box-shadow:
+    inset 0 0 16px hsl(var(--primary) / 0.08),
+    0 0 18px hsl(var(--primary) / 0.1);
+}
+
+.scroll-indicator-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
+  opacity: 0.18;
+  transform: translateX(-45%);
+  animation: scroll-shimmer 3.8s ease-in-out infinite;
+}
+
+@keyframes scroll-dot-fall {
+  0% {
+    transform: translateY(-6px);
+    opacity: 0.25;
+  }
+  25% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    transform: translateY(12px);
+    opacity: 0.2;
+  }
+}
+
+@keyframes scroll-chevron {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.95;
+  }
+}
+
+@keyframes scroll-shimmer {
+  0% {
+    transform: translateX(-45%);
+  }
+  50% {
+    transform: translateX(45%);
+  }
+  100% {
+    transform: translateX(-45%);
+  }
+}
+
+/* Reduced motion: disable all scroll indicator animations */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-indicator-dot,
+  .scroll-indicator-chevron path,
+  .scroll-indicator-shimmer::before {
+    animation: none !important;
+  }
+
+  .scroll-indicator-dot {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+
+  .scroll-indicator-chevron path {
+    opacity: 0.7;
+  }
+}

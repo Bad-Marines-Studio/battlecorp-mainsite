@@ -1,0 +1,4 @@
+# SPA Fallback for Netlify
+# All routes should redirect to index.html for React Router
+
+/*    /index.html   200
