@@ -204,7 +204,7 @@ export function Header() {
                 {t.nav.login}
               </Link>
               <Link
-                to={getLocalizedPath("/auth")}
+                to={getLocalizedPath("/auth?action=register")}
                 className="btn-bc btn-cta-primary btn-bc--sm"
               >
                 {t.nav.signup}
@@ -383,7 +383,7 @@ export function Header() {
                   {t.nav.login}
                 </Link>
                 <Link
-                  to={getLocalizedPath("/auth")}
+                  to={getLocalizedPath("/auth?action=register")}
                   onClick={() => setIsOpen(false)}
                   className="btn-bc btn-cta-primary btn-bc--sm w-full justify-center"
                 >

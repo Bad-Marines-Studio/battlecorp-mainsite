@@ -246,8 +246,11 @@ export interface TranslationKeys {
       noAccount: string;
       createAccount: string;
       forgotPassword: string;
+      error: string;
+      resendActivation: string;
+      loading: string;
     };
-    signup: {
+    register: {
       title: string;
       subtitle: string;
       username: string;
@@ -257,7 +260,53 @@ export interface TranslationKeys {
       submit: string;
       hasAccount: string;
       signIn: string;
-      acceptTerms: string;
+      loading: string;
+      success: string;
+      error: string;
+      usernameHelp: string;
+      passwordHelp: string;
+    };
+    passwordReset: {
+      title: string;
+      subtitle: string;
+      email: string;
+      submit: string;
+      loading: string;
+      success: string;
+      error: string;
+      redirect: string;
+      tokenTitle: string;
+      tokenSubtitle: string;
+      newPassword: string;
+      confirmPassword: string;
+      submitToken: string;
+      tokenLoading: string;
+      tokenSuccess: string;
+      tokenError: string;
+      invalidToken: string;
+    };
+    emailValidation: {
+      title: string;
+      subtitle: string;
+      validating: string;
+      success: string;
+      error: string;
+      invalidToken: string;
+      redirect: string;
+    };
+    errors: {
+      [key: string]: string;
+    };
+    passwordValidation: {
+      [key: string]: string;
+    };
+    account: {
+      logout: string;
+      logoutLoading: string;
+      profile: string;
+      settings: string;
+      help: string;
+      logoutSuccess: string;
     };
   };
   authShell: {
@@ -773,24 +822,80 @@ export const fr: TranslationKeys = {
     login: {
       title: "Connexion",
       subtitle: "Connectez-vous à votre compte BattleCorp",
-      email: "Email",
+      email: "Email ou nom d'utilisateur",
       password: "Mot de passe",
       submit: "Se connecter",
       noAccount: "Pas encore de compte ?",
       createAccount: "Créer un compte",
       forgotPassword: "Mot de passe oublié ?",
+      error: "Identifiants invalides",
+      resendActivation: "Renvoyer l'email d'activation",
+      loading: "Connexion en cours...",
     },
-    signup: {
-      title: "Inscription",
-      subtitle: "Créez votre compte BattleCorp",
+    register: {
+      title: "Créer un compte",
+      subtitle: "Rejoignez l'univers de BattleCorp",
       username: "Nom d'utilisateur",
       email: "Email",
       password: "Mot de passe",
       confirmPassword: "Confirmer le mot de passe",
       submit: "Créer mon compte",
-      hasAccount: "Déjà un compte ?",
-      signIn: "Se connecter",
-      acceptTerms: "J'accepte les conditions d'utilisation",
+      hasAccount: "Vous avez déjà un compte ?",
+      signIn: "Se connecter à la place",
+      loading: "Création du compte...",
+      success: "Compte créé ! Redirection vers la connexion...",
+      error: "Impossible de créer le compte",
+      usernameHelp: "3-30 caractères, alphanumérique",
+      passwordHelp: "Minimum 8 caractères avec 3 types (majuscule, minuscule, chiffre, spécial)",
+    },
+    passwordReset: {
+      title: "Réinitialiser le mot de passe",
+      subtitle: "Retrouvez l'accès à votre compte",
+      email: "Adresse email",
+      submit: "Envoyer le lien",
+      loading: "Envoi en cours...",
+      success: "Vérifiez votre email pour le lien de réinitialisation",
+      error: "Impossible d'envoyer le lien",
+      redirect: "Redirection vers la connexion...",
+      tokenTitle: "Créer un nouveau mot de passe",
+      tokenSubtitle: "Entrez votre nouveau mot de passe",
+      newPassword: "Nouveau mot de passe",
+      confirmPassword: "Confirmer le mot de passe",
+      submitToken: "Réinitialiser le mot de passe",
+      tokenLoading: "Réinitialisation en cours...",
+      tokenSuccess: "Mot de passe réinitialisé ! Redirection...",
+      tokenError: "Impossible de réinitialiser le mot de passe",
+      invalidToken: "Ce lien de réinitialisation est invalide ou expiré",
+    },
+    emailValidation: {
+      title: "Vérifier l'email",
+      subtitle: "Confirmation de votre adresse email",
+      validating: "Vérification de votre email...",
+      success: "Email vérifié ! Vous pouvez maintenant vous connecter.",
+      error: "Vérification de l'email échouée",
+      invalidToken: "Ce lien de vérification est invalide ou expiré",
+      redirect: "Redirection en cours...",
+    },
+    errors: {
+      "Created account": "Veuillez vérifier votre email avant de vous connecter",
+      "Banned account": "Votre compte a été suspendu",
+      "Disabled account": "Votre compte a été désactivé",
+      "InvalidCredentials": "Email ou mot de passe invalide",
+      "CouldNotReachServer": "Impossible de rejoindre le serveur",
+      "UnknownServerError": "Une erreur inconnue s'est produite",
+      "GenericErrorMessage": "Quelque chose s'est mal passé",
+    },
+    passwordValidation: {
+      PasswordErrorMinLength: "Le mot de passe doit contenir au moins 8 caractères",
+      PasswordErrorTypes: "Le mot de passe doit contenir au moins 3 types : majuscule, minuscule, chiffre ou caractère spécial",
+    },
+    account: {
+      logout: "Déconnexion",
+      logoutLoading: "Déconnexion en cours...",
+      profile: "Profil",
+      settings: "Paramètres",
+      help: "Aide",
+      logoutSuccess: "Vous avez été déconnecté",
     },
   },
   authShell: {
