@@ -27,6 +27,5 @@ export * from './apis/wargames-locks-api';
 export * from './apis/wargames-messenger-api';
 export * from './apis/wargames-mutes-api';
 export * from './apis/wargames-orders-api';
-export * from './apis/wargames-states-api';
 export * from './apis/wg-resolution-api';
 

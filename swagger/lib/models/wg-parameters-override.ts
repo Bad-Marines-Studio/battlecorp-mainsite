@@ -22,17 +22,17 @@ export interface WgParametersOverride {
      * @type {{ [key: string]: number; }}
      * @memberof WgParametersOverride
      */
-    integerParameters: { [key: string]: number; };
+    integerParameters?: { [key: string]: number; };
     /**
      * Wargame float parameters
      * @type {{ [key: string]: number; }}
      * @memberof WgParametersOverride
      */
-    floatParameters: { [key: string]: number; };
+    floatParameters?: { [key: string]: number; };
     /**
      * Wargame bool parameters
      * @type {{ [key: string]: boolean; }}
      * @memberof WgParametersOverride
      */
-    boolParameters: { [key: string]: boolean; };
+    boolParameters?: { [key: string]: boolean; };
 }
