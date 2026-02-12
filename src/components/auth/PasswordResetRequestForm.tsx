@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { ApiSingletons } from '@/api/apiSingletons';
 import { Logger } from '@/utils/logger';
-import { EMAIL_REGEXP } from '@/constants/auth';
+import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS, EMAIL_REGEXP } from '@/constants/auth';
 
 export function PasswordResetRequestForm() {
-    const { t, getLocalizedPath } = useLanguage();
+    const { t } = useLanguage();
+    const location = useLocation();
+    const passwordResetText = (t.auth as any).passwordReset ?? {};
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -14,6 +16,12 @@ export function PasswordResetRequestForm() {
     const [email, setEmail] = useState('');
 
     const isFormValid = email && EMAIL_REGEXP.test(email);
+
+    const openAuthAction = (nextAction: string) => {
+        const params = new URLSearchParams(location.search);
+        params.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, nextAction);
+        navigate(`${location.pathname}?${params.toString()}${location.hash}`);
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -36,15 +44,15 @@ export function PasswordResetRequestForm() {
             if (response?.status === 201) {
                 setSuccess(true);
                 setTimeout(() => {
-                    navigate(getLocalizedPath('/auth?action=login'));
+                    openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN);
                 }, 3000);
             } else {
-                setError(t.auth.passwordReset.error);
+                setError(passwordResetText.error ?? t.common.error);
             }
         } catch (err: any) {
             Logger.error('Password reset request error:', err);
             if (err.response) {
-                setError(err.response.data?.message || t.auth.passwordReset.error);
+                setError(err.response.data?.message || passwordResetText.error || t.common.error);
             } else {
                 setError('Unable to reach server');
             }
@@ -57,10 +65,10 @@ export function PasswordResetRequestForm() {
         return (
             <div className="text-center space-y-4">
                 <div className="p-4 bg-green-900/20 border border-green-700 rounded-lg text-green-200">
-                    {t.auth.passwordReset.success}
+                    {passwordResetText.success ?? "Password reset email sent"}
                 </div>
                 <p className="text-gray-400 text-sm">
-                    {t.auth.passwordReset.redirect}
+                    {passwordResetText.redirect ?? "Redirecting to login..."}
                 </p>
             </div>
         );
@@ -76,7 +84,7 @@ export function PasswordResetRequestForm() {
 
             <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    {t.auth.passwordReset.email}
+                    {passwordResetText.email ?? t.auth.login.email}
                 </label>
                 <input
                     id="email"
@@ -84,7 +92,7 @@ export function PasswordResetRequestForm() {
                     type="email"
                     value={email}
                     onChange={handleChange}
-                    placeholder={t.auth.passwordReset.email}
+                    placeholder={passwordResetText.email ?? t.auth.login.email}
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:border-primary focus:outline-none transition-colors"
                     disabled={loading}
                 />
@@ -95,13 +103,13 @@ export function PasswordResetRequestForm() {
                 disabled={!isFormValid || loading}
                 className="w-full py-2 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
             >
-                {loading ? t.auth.passwordReset.loading : t.auth.passwordReset.submit}
+                {loading ? (passwordResetText.loading ?? t.common.loading) : (passwordResetText.submit ?? t.auth.login.forgotPassword)}
             </button>
 
             <div className="text-center text-sm pt-4">
                 <button
                     type="button"
-                    onClick={() => navigate(getLocalizedPath('/auth?action=login'))}
+                    onClick={() => openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
                     className="text-primary hover:underline"
                 >
                     {t.common.back}

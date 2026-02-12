@@ -16,6 +16,10 @@ export default function AuthShell() {
   const { t, language, getLocalizedPath } = useLanguage();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const authAny = t.auth as any;
+  const registerText = authAny.register ?? authAny.signup ?? {};
+  const passwordResetText = authAny.passwordReset ?? {};
+  const emailValidationText = authAny.emailValidation ?? {};
 
   const action = searchParams.get(APP_SEARCH_PARAM_HOME_KEYS.ACTION) || APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN;
 
@@ -34,9 +38,9 @@ export default function AuthShell() {
         return <RegisterForm />;
       case APP_SEARCH_PARAM_HOME_ACTIONS.PASSWORD_RESET:
         return <PasswordResetRequestForm />;
-      case 'password-reset-token':
+      case "password-reset-token":
         return <PasswordResetForm />;
-      case 'email-validation':
+      case "email-validation":
         return <EmailValidationForm />;
       case APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN:
       default:
@@ -47,13 +51,13 @@ export default function AuthShell() {
   const getFormTitle = () => {
     switch (action) {
       case APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER:
-        return t.auth.register.title;
+        return registerText.title ?? t.nav.signup;
       case APP_SEARCH_PARAM_HOME_ACTIONS.PASSWORD_RESET:
-        return t.auth.passwordReset.title;
-      case 'password-reset-token':
-        return t.auth.passwordReset.tokenTitle;
-      case 'email-validation':
-        return t.auth.emailValidation.title;
+        return passwordResetText.title ?? t.auth.login.forgotPassword;
+      case "password-reset-token":
+        return passwordResetText.tokenTitle ?? (passwordResetText.title ?? t.auth.login.forgotPassword);
+      case "email-validation":
+        return emailValidationText.title ?? t.authShell.title;
       case APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN:
       default:
         return t.auth.login.title;

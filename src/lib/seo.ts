@@ -1,4 +1,4 @@
-import type { Language } from "@/i18n";
+﻿import type { Language } from "@/i18n";
 
 interface SEOMeta {
   title: string;
@@ -8,12 +8,19 @@ interface SEOMeta {
   baseUrl?: string;
 }
 
-const DEFAULT_BASE_URL = "https://id-preview--18946607-4aa7-4632-8a1e-78a1aa722341.lovable.app";
+const BASE_PATH = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL.slice(0, -1)
+  : import.meta.env.BASE_URL;
 
 const LOCALE_MAP: Record<Language, string> = {
   fr: "fr_FR",
   en: "en_US",
 };
+
+function getDefaultBaseUrl(): string {
+  if (typeof window === "undefined") return "";
+  return `${window.location.origin}${BASE_PATH}`;
+}
 
 function getOrCreateElement<T extends HTMLElement>(
   selector: string,
@@ -35,23 +42,29 @@ function getOrCreateLink(rel: string, hreflang?: string): HTMLLinkElement {
   const selector = hreflang
     ? `link[rel="${rel}"][hreflang="${hreflang}"]`
     : `link[rel="${rel}"]`;
-  
+
   const attrs: Record<string, string> = { rel };
   if (hreflang) attrs.hreflang = hreflang;
-  
+
   return getOrCreateElement<HTMLLinkElement>(selector, "link", attrs);
 }
 
-function getOrCreateMeta(property: string): HTMLMetaElement {
+function getOrCreateMetaProperty(property: string): HTMLMetaElement {
   const selector = `meta[property="${property}"]`;
   return getOrCreateElement<HTMLMetaElement>(selector, "meta", { property });
 }
 
+function getOrCreateMetaName(name: string): HTMLMetaElement {
+  const selector = `meta[name="${name}"]`;
+  return getOrCreateElement<HTMLMetaElement>(selector, "meta", { name });
+}
+
 export function setDocumentMeta({ title, description, path, language, baseUrl }: SEOMeta): void {
-  const base = baseUrl || DEFAULT_BASE_URL;
+  const base = baseUrl || getDefaultBaseUrl();
   const currentUrl = `${base}${path}`;
   const alternateLanguage: Language = language === "fr" ? "en" : "fr";
-  
+  const ogImageUrl = `${base}/og-image.jpg`;
+
   // Build alternate path by replacing language prefix
   const alternatePath = path.replace(/^\/(fr|en)/, `/${alternateLanguage}`);
   const alternateUrl = `${base}${alternatePath}`;
@@ -61,33 +74,40 @@ export function setDocumentMeta({ title, description, path, language, baseUrl }:
   document.title = title;
 
   // Update or create meta description
-  let metaDesc = document.querySelector('meta[name="description"]');
-  if (!metaDesc) {
-    metaDesc = document.createElement("meta");
-    metaDesc.setAttribute("name", "description");
-    document.head.appendChild(metaDesc);
-  }
+  const metaDesc = getOrCreateMetaName("description");
   metaDesc.setAttribute("content", description);
 
-  // Update or create og:title
-  const ogTitle = getOrCreateMeta("og:title");
+  // Open Graph
+  const ogTitle = getOrCreateMetaProperty("og:title");
   ogTitle.setAttribute("content", title);
 
-  // Update or create og:description
-  const ogDesc = getOrCreateMeta("og:description");
+  const ogDesc = getOrCreateMetaProperty("og:description");
   ogDesc.setAttribute("content", description);
 
-  // Update or create og:url
-  const ogUrl = getOrCreateMeta("og:url");
+  const ogUrl = getOrCreateMetaProperty("og:url");
   ogUrl.setAttribute("content", currentUrl);
 
-  // Update or create og:locale
-  const ogLocale = getOrCreateMeta("og:locale");
+  const ogLocale = getOrCreateMetaProperty("og:locale");
   ogLocale.setAttribute("content", LOCALE_MAP[language]);
 
-  // Update or create og:locale:alternate
-  const ogLocaleAlt = getOrCreateMeta("og:locale:alternate");
+  const ogLocaleAlt = getOrCreateMetaProperty("og:locale:alternate");
   ogLocaleAlt.setAttribute("content", LOCALE_MAP[alternateLanguage]);
+
+  const ogImage = getOrCreateMetaProperty("og:image");
+  ogImage.setAttribute("content", ogImageUrl);
+
+  // Twitter Card
+  const twitterCard = getOrCreateMetaName("twitter:card");
+  twitterCard.setAttribute("content", "summary_large_image");
+
+  const twitterTitle = getOrCreateMetaName("twitter:title");
+  twitterTitle.setAttribute("content", title);
+
+  const twitterDescription = getOrCreateMetaName("twitter:description");
+  twitterDescription.setAttribute("content", description);
+
+  const twitterImage = getOrCreateMetaName("twitter:image");
+  twitterImage.setAttribute("content", ogImageUrl);
 
   // Canonical link
   const canonical = getOrCreateLink("canonical");

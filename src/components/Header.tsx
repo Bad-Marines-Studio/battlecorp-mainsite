@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 import { useLanguage } from "@/i18n";
 import { EXTERNAL_LINKS, getWhitepaperUrl } from "@/config/links";
+import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS } from "@/constants/auth";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { HamburgerIcon } from "./HamburgerIcon";
 import { Container } from "./Container";
@@ -132,6 +133,12 @@ export function Header() {
     { label: t.nav.support, href: EXTERNAL_LINKS.support },
   ];
 
+  const getAuthModalLink = (action: string) => {
+    const params = new URLSearchParams(location.search);
+    params.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, action);
+    return `${location.pathname}?${params.toString()}${location.hash}`;
+  };
+
   return (
     <>
       <header
@@ -198,13 +205,13 @@ export function Header() {
             <div className="hidden md:flex items-center gap-4">
               <LanguageSwitch />
               <Link
-                to={getLocalizedPath("/auth")}
+                to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t.nav.login}
               </Link>
               <Link
-                to={getLocalizedPath("/auth?action=register")}
+                to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER)}
                 className="btn-bc btn-cta-primary btn-bc--sm"
               >
                 {t.nav.signup}
@@ -371,7 +378,7 @@ export function Header() {
                 style={{ animationDelay: "600ms", animationFillMode: "forwards" }}
               >
                 <Link
-                  to={getLocalizedPath("/auth")}
+                  to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
                   onClick={() => setIsOpen(false)}
                   className="
                     w-full py-3 text-center text-foreground 
@@ -383,7 +390,7 @@ export function Header() {
                   {t.nav.login}
                 </Link>
                 <Link
-                  to={getLocalizedPath("/auth?action=register")}
+                  to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER)}
                   onClick={() => setIsOpen(false)}
                   className="btn-bc btn-cta-primary btn-bc--sm w-full justify-center"
                 >

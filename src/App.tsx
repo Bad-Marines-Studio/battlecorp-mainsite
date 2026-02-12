@@ -7,12 +7,12 @@ import { PublicRoute } from "@/components/PublicRoute";
 import { AuthProvider } from "@/context/AuthContext";
 import { VALID_LANGUAGES, defaultLanguage, type Language } from "@/i18n";
 import Home from "@/pages/Home";
-import AuthShell from "@/pages/AuthShell";
 import AppPlaceholder from "@/pages/AppPlaceholder";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Cookies from "@/pages/Cookies";
 import NotFound from "@/pages/NotFound";
+import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS, APP_SEARCH_PARAM_TOKEN } from "@/constants/auth";
 
 // Language guard component - preserves sub-path, search, and hash on redirect
 function LanguageGuard({ children }: { children: ReactNode }) {
@@ -33,10 +33,24 @@ function LanguageGuard({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+function AuthRouteRedirect() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const action = searchParams.get(APP_SEARCH_PARAM_HOME_KEYS.ACTION) ?? APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN;
+  const token = searchParams.get(APP_SEARCH_PARAM_TOKEN);
+  const nextParams = new URLSearchParams();
+  nextParams.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, action);
+  if (token) {
+    nextParams.set(APP_SEARCH_PARAM_TOKEN, token);
+  }
+
+  return <Navigate to={`..?${nextParams.toString()}`} replace />;
+}
+
 function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <AuthProvider>
           <Routes>
             {/* Root redirect */}
@@ -59,15 +73,15 @@ function App() {
                 path="auth"
                 element={
                   <PublicRoute>
-                    <AuthShell />
+                    <AuthRouteRedirect />
                   </PublicRoute>
                 }
               />
 
               {/* Legacy auth redirects */}
-              <Route path="login" element={<Navigate to="../auth" replace />} />
-              <Route path="signup" element={<Navigate to="../auth" replace />} />
-              <Route path="forgot-password" element={<Navigate to="../auth" replace />} />
+              <Route path="login" element={<Navigate to={`../?${APP_SEARCH_PARAM_HOME_KEYS.ACTION}=${APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN}`} replace />} />
+              <Route path="signup" element={<Navigate to={`../?${APP_SEARCH_PARAM_HOME_KEYS.ACTION}=${APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER}`} replace />} />
+              <Route path="forgot-password" element={<Navigate to={`../?${APP_SEARCH_PARAM_HOME_KEYS.ACTION}=${APP_SEARCH_PARAM_HOME_ACTIONS.PASSWORD_RESET}`} replace />} />
 
               {/* App placeholder - Protected */}
               <Route

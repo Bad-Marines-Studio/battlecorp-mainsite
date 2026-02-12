@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Play, ChevronRight } from "lucide-react";
 import { gsap } from "gsap";
@@ -11,8 +11,23 @@ import heroBg from "@/assets/herodesktop_bg.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type HeroParticle = {
+  delay: number;
+  driftX: number;
+  driftY: number;
+  duration: number;
+  id: number;
+  left: number;
+  size: number;
+  tone: "accent" | "primary";
+  top: number;
+  twinkleDelay: number;
+  twinkleDuration: number;
+  variant: "base" | "alt";
+};
+
 export function HeroSection() {
-  const { t, language } = useLanguage();
+  const { t, getLocalizedPath } = useLanguage();
   const hero = t.home.sections.hero;
   const isMobile = useIsMobile();
 
@@ -32,16 +47,26 @@ export function HeroSection() {
   const glitchTlRef = useRef<gsap.core.Timeline | null>(null);
 
   // Memoize particle positions to avoid regeneration on re-renders
-  const particleCount = isMobile ? 8 : 20;
-  const particles = useMemo(() => 
-    Array.from({ length: particleCount }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      delay: Math.random() * 5,
-      duration: 5 + Math.random() * 5,
-    })), 
-  [particleCount]);
+  const particleCount = isMobile ? 18 : 44;
+  const particles = useMemo<HeroParticle[]>(
+    () =>
+      Array.from({ length: particleCount }, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        size: isMobile ? 1.2 + Math.random() * 2 : 1.4 + Math.random() * 3.2,
+        delay: Math.random() * 6,
+        duration: 4.6 + Math.random() * 5.2,
+        driftX: Math.random() * 70 - 35,
+        driftY: -(95 + Math.random() * 155),
+        twinkleDelay: Math.random() * 2.2,
+        twinkleDuration: 1.2 + Math.random() * 1.9,
+        // Keep orange dominant so particles align with the hero's warm highlights.
+        tone: Math.random() > 0.32 ? "accent" : "primary",
+        variant: Math.random() > 0.52 ? "base" : "alt",
+      })),
+    [isMobile, particleCount]
+  );
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -205,48 +230,75 @@ export function HeroSection() {
       });
 
       // Periodic glitch effect on title - stored in ref for pause/resume control
-      glitchTlRef.current = gsap.timeline({ repeat: -1, repeatDelay: 4 });
+      gsap.set(titlePart2Ref.current, { "--corp-holo-intensity": 0 });
+      glitchTlRef.current = gsap.timeline({ repeat: -1, repeatDelay: 2.6 });
       glitchTlRef.current
+        .to(titlePart2Ref.current, {
+          "--corp-holo-intensity": 1,
+          duration: 0.02,
+          ease: "none",
+        })
         .to(glitchOverlayRef.current, {
           opacity: 0.8,
-          duration: 0.05,
-        })
+          duration: 0.04,
+        }, "<")
         .to(titlePart2Ref.current, {
           x: -3,
           skewX: -2,
-          duration: 0.05,
+          duration: 0.04,
         })
         .to(glitchOverlayRef.current, {
           opacity: 0,
-          duration: 0.05,
-        })
+          duration: 0.04,
+        }, "<")
+        .to(titlePart2Ref.current, {
+          "--corp-holo-intensity": 0.35,
+          duration: 0.03,
+          ease: "none",
+        }, "<")
         .to(titlePart2Ref.current, {
           x: 2,
           skewX: 1,
-          duration: 0.05,
+          duration: 0.04,
         })
         .to(titlePart2Ref.current, {
           x: 0,
           skewX: 0,
-          duration: 0.1,
+          duration: 0.08,
         })
         .to(glitchOverlayRef.current, {
           opacity: 0.5,
-          duration: 0.03,
-        })
+          duration: 0.025,
+        }, "<")
+        .to(titlePart2Ref.current, {
+          "--corp-holo-intensity": 0.9,
+          duration: 0.015,
+          ease: "none",
+        }, "<")
         .to(glitchOverlayRef.current, {
           opacity: 0,
-          duration: 0.05,
-        });
+          duration: 0.04,
+        })
+        .to(titlePart2Ref.current, {
+          "--corp-holo-intensity": 0,
+          duration: 0.06,
+          ease: "power1.out",
+        }, "<");
 
       // Pause/resume glitch timeline based on viewport visibility
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top bottom",
         end: "bottom top",
-        onLeave: () => glitchTlRef.current?.pause(),
+        onLeave: () => {
+          glitchTlRef.current?.pause();
+          gsap.set(titlePart2Ref.current, { "--corp-holo-intensity": 0 });
+        },
         onEnterBack: () => glitchTlRef.current?.play(),
-        onLeaveBack: () => glitchTlRef.current?.pause(),
+        onLeaveBack: () => {
+          glitchTlRef.current?.pause();
+          gsap.set(titlePart2Ref.current, { "--corp-holo-intensity": 0 });
+        },
         onEnter: () => glitchTlRef.current?.play(),
       });
 
@@ -331,14 +383,30 @@ export function HeroSection() {
         {particles.map((particle) => (
           <div
             key={particle.id}
-            className="absolute w-1 h-1 bg-primary/30 rounded-full animate-float-particle"
-            style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              animationDelay: `${particle.delay}s`,
-              animationDuration: `${particle.duration}s`,
-            }}
-          />
+            className={`absolute hero-particle-container ${
+              particle.variant === "base" ? "animate-float-particle" : "animate-float-particle-alt"
+            }`}
+            style={
+              {
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+                "--drift-x": `${particle.driftX}px`,
+                "--drift-y": `${particle.driftY}px`,
+                "--particle-delay": `${particle.delay}s`,
+                "--particle-duration": `${particle.duration}s`,
+                "--twinkle-delay": `${particle.twinkleDelay}s`,
+                "--twinkle-duration": `${particle.twinkleDuration}s`,
+              } as CSSProperties
+            }
+          >
+            <span
+              className={`block h-full w-full rounded-full hero-particle-core animate-particle-twinkle ${
+                particle.tone === "accent" ? "hero-particle-accent" : "hero-particle-primary"
+              }`}
+            />
+          </div>
         ))}
       </div>
 
@@ -368,12 +436,13 @@ export function HeroSection() {
               </span>
               <span 
                 ref={titlePart2Ref}
-                className="inline-block text-gradient-primary will-change-transform relative"
+                className="inline-block text-gradient-accent hero-corp-holo will-change-transform relative"
+                data-text={hero.titlePart2}
               >
                 {hero.titlePart2}
                 {/* Glow effect behind gradient text */}
                 <span 
-                  className="absolute inset-0 blur-xl bg-primary/20 -z-10"
+                  className="absolute inset-0 blur-xl bg-accent/20 -z-10"
                   aria-hidden="true"
                 />
               </span>
@@ -390,7 +459,11 @@ export function HeroSection() {
 
           {/* CTAs with premium buttons */}
           <div ref={ctaContainerRef} className="flex flex-col sm:flex-row gap-4 mb-10 will-change-transform">
-            <Link to={`/${language}/auth`} className="btn-bc btn-cta-primary btn-bc--md group">
+            <Link
+              to={getLocalizedPath("/?action=login")}
+              className="btn-bc btn-cta-primary btn-bc--md group"
+              data-ui-sound="play"
+            >
               {hero.cta}
               <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>

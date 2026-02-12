@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { ApiSingletons } from '@/api/apiSingletons';
 import { Logger } from '@/utils/logger';
 import { validatePassword } from '@/utils/passwordValidator';
-import { APP_SEARCH_PARAM_TOKEN } from '@/constants/auth';
+import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS, APP_SEARCH_PARAM_TOKEN } from '@/constants/auth';
 
 export function PasswordResetForm() {
-    const { t, getLocalizedPath } = useLanguage();
+    const { t } = useLanguage();
+    const location = useLocation();
+    const authAny = t.auth as any;
+    const passwordResetText = authAny.passwordReset ?? {};
+    const passwordValidationText = authAny.passwordValidation ?? {};
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const token = searchParams.get(APP_SEARCH_PARAM_TOKEN);
@@ -23,9 +27,16 @@ export function PasswordResetForm() {
         confirmPassword: '',
     });
 
+    const openAuthAction = (nextAction: string) => {
+        const params = new URLSearchParams(location.search);
+        params.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, nextAction);
+        params.delete(APP_SEARCH_PARAM_TOKEN);
+        navigate(`${location.pathname}?${params.toString()}${location.hash}`);
+    };
+
     useEffect(() => {
         if (!token) {
-            setError(t.auth.passwordReset.invalidToken);
+            setError(passwordResetText.invalidToken ?? "Invalid or expired token");
             setValidating(false);
             return;
         }
@@ -39,18 +50,18 @@ export function PasswordResetForm() {
                 if (response?.status === 200) {
                     setTokenValid(true);
                 } else {
-                    setError(t.auth.passwordReset.invalidToken);
+                    setError(passwordResetText.invalidToken ?? "Invalid or expired token");
                 }
             } catch (err: any) {
                 Logger.error('Token validation error:', err);
-                setError(t.auth.passwordReset.invalidToken);
+                setError(passwordResetText.invalidToken ?? "Invalid or expired token");
             } finally {
                 setValidating(false);
             }
         };
 
         validateToken();
-    }, [token, t]);
+    }, [token, passwordResetText.invalidToken]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -75,7 +86,9 @@ export function PasswordResetForm() {
         } else {
             const passwordErrors = validatePassword(formData.newPassword);
             if (passwordErrors.length > 0) {
-                newErrors.newPassword = passwordErrors.map(key => t.auth.passwordValidation[key]).join('; ');
+                newErrors.newPassword = passwordErrors
+                    .map((key) => passwordValidationText[key] ?? key)
+                    .join("; ");
             }
         }
 
@@ -107,14 +120,14 @@ export function PasswordResetForm() {
 
             if (response?.status === 200) {
                 // Success - redirect to login
-                navigate(getLocalizedPath('/auth?action=login'));
+                openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN);
             } else {
-                setError(t.auth.passwordReset.tokenError);
+                setError(passwordResetText.tokenError ?? t.common.error);
             }
         } catch (err: any) {
             Logger.error('Password reset error:', err);
             if (err.response) {
-                setError(err.response.data?.message || t.auth.passwordReset.tokenError);
+                setError(err.response.data?.message || passwordResetText.tokenError || t.common.error);
             } else {
                 setError('Unable to reach server');
             }
@@ -135,10 +148,10 @@ export function PasswordResetForm() {
         return (
             <div className="space-y-4">
                 <div className="p-4 bg-red-900/20 border border-red-700 rounded-lg text-red-200">
-                    {error || t.auth.passwordReset.invalidToken}
+                    {error || passwordResetText.invalidToken || "Invalid or expired token"}
                 </div>
                 <button
-                    onClick={() => navigate(getLocalizedPath('/auth?action=password-reset'))}
+                    onClick={() => openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.PASSWORD_RESET)}
                     className="w-full py-2 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition-colors"
                 >
                     {t.common.back}
@@ -151,7 +164,7 @@ export function PasswordResetForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
                 <label htmlFor="newPassword" className="block text-sm font-medium mb-2">
-                    {t.auth.passwordReset.newPassword}
+                    {passwordResetText.newPassword ?? "New password"}
                 </label>
                 <div className="relative">
                     <input
@@ -160,7 +173,7 @@ export function PasswordResetForm() {
                         type={showPassword ? 'text' : 'password'}
                         value={formData.newPassword}
                         onChange={handleChange}
-                        placeholder={t.auth.passwordReset.newPassword}
+                        placeholder={passwordResetText.newPassword ?? "New password"}
                         className={`w-full px-3 py-2 bg-slate-800 border rounded-lg focus:outline-none transition-colors ${
                             errors.newPassword ? 'border-red-600' : 'border-slate-700 focus:border-primary'
                         }`}
@@ -179,7 +192,7 @@ export function PasswordResetForm() {
 
             <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
-                    {t.auth.passwordReset.confirmPassword}
+                    {passwordResetText.confirmPassword ?? "Confirm password"}
                 </label>
                 <input
                     id="confirmPassword"
@@ -187,7 +200,7 @@ export function PasswordResetForm() {
                     type={showPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    placeholder={t.auth.passwordReset.confirmPassword}
+                    placeholder={passwordResetText.confirmPassword ?? "Confirm password"}
                     className={`w-full px-3 py-2 bg-slate-800 border rounded-lg focus:outline-none transition-colors ${
                         errors.confirmPassword ? 'border-red-600' : 'border-slate-700 focus:border-primary'
                     }`}
@@ -203,7 +216,7 @@ export function PasswordResetForm() {
                 disabled={loading}
                 className="w-full py-2 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
             >
-                {loading ? t.auth.passwordReset.tokenLoading : t.auth.passwordReset.submitToken}
+                {loading ? (passwordResetText.tokenLoading ?? t.common.loading) : (passwordResetText.submitToken ?? "Reset password")}
             </button>
         </form>
     );

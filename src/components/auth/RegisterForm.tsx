@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { ApiSingletons } from '@/api/apiSingletons';
 import { UserRegisterDto } from '@bad-marines-studio/bch-react-rest-client';
 import { Logger } from '@/utils/logger';
 import { validatePassword } from '@/utils/passwordValidator';
-import { USERNAME_REGEXP, EMAIL_REGEXP, EMAIL_FORBIDDEN_DOMAINS } from '@/constants/auth';
+import { USERNAME_REGEXP, EMAIL_REGEXP, EMAIL_FORBIDDEN_DOMAINS, APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS } from '@/constants/auth';
 
 interface RegisterFormProps {
     onSuccess?: () => void;
@@ -16,7 +16,11 @@ export function RegisterForm({
     onSuccess,
     showLoginLink = true,
 }: RegisterFormProps) {
-    const { t, getLocalizedPath } = useLanguage();
+    const { t } = useLanguage();
+    const location = useLocation();
+    const authAny = t.auth as any;
+    const registerText = authAny.register ?? authAny.signup ?? {};
+    const passwordValidationText = authAny.passwordValidation ?? {};
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -28,6 +32,12 @@ export function RegisterForm({
         password: '',
         confirmPassword: '',
     });
+
+    const openAuthAction = (nextAction: string) => {
+        const params = new URLSearchParams(location.search);
+        params.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, nextAction);
+        navigate(`${location.pathname}?${params.toString()}${location.hash}`);
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -72,7 +82,9 @@ export function RegisterForm({
         } else {
             const passwordErrors = validatePassword(formData.password);
             if (passwordErrors.length > 0) {
-                newErrors.password = passwordErrors.map(key => t.auth.passwordValidation[key]).join('; ');
+                newErrors.password = passwordErrors
+                    .map((key) => passwordValidationText[key] ?? key)
+                    .join("; ");
             }
         }
 
@@ -105,10 +117,10 @@ export function RegisterForm({
             );
 
             if (response?.status === 201) {
-                navigate(getLocalizedPath('/auth?action=login'));
+                openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN);
                 onSuccess?.();
             } else {
-                setError(t.auth.register.error);
+                setError(registerText.error ?? t.common.error);
             }
         } catch (err: any) {
             Logger.error('Register error:', err);
@@ -118,7 +130,7 @@ export function RegisterForm({
                 setErrors(serverErrors);
                 setError(t.common.error);
             } else if (err.response) {
-                setError(err.response.data?.message || t.auth.register.error);
+                setError(err.response.data?.message || registerText.error || t.common.error);
             } else {
                 setError('Unable to reach server');
             }
@@ -137,7 +149,7 @@ export function RegisterForm({
 
             <div>
                 <label htmlFor="username" className="block text-sm font-medium mb-2">
-                    {t.auth.register.username}
+                    {registerText.username ?? "Username"}
                 </label>
                 <input
                     id="username"
@@ -145,19 +157,19 @@ export function RegisterForm({
                     type="text"
                     value={formData.username}
                     onChange={handleChange}
-                    placeholder={t.auth.register.username}
+                    placeholder={registerText.username ?? "Username"}
                     className={`w-full px-3 py-2 bg-slate-800 border rounded-lg focus:outline-none transition-colors ${
                         errors.username ? 'border-red-600' : 'border-slate-700 focus:border-primary'
                     }`}
                     disabled={loading}
                 />
                 {errors.username && <p className="text-red-400 text-sm mt-1">{errors.username}</p>}
-                <p className="text-gray-400 text-xs mt-1">{t.auth.register.usernameHelp}</p>
+                <p className="text-gray-400 text-xs mt-1">{registerText.usernameHelp ?? "3-30 alphanumeric characters"}</p>
             </div>
 
             <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    {t.auth.register.email}
+                    {registerText.email ?? "Email"}
                 </label>
                 <input
                     id="email"
@@ -165,7 +177,7 @@ export function RegisterForm({
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder={t.auth.register.email}
+                    placeholder={registerText.email ?? "Email"}
                     className={`w-full px-3 py-2 bg-slate-800 border rounded-lg focus:outline-none transition-colors ${
                         errors.email ? 'border-red-600' : 'border-slate-700 focus:border-primary'
                     }`}
@@ -176,7 +188,7 @@ export function RegisterForm({
 
             <div>
                 <label htmlFor="password" className="block text-sm font-medium mb-2">
-                    {t.auth.register.password}
+                    {registerText.password ?? "Password"}
                 </label>
                 <div className="relative">
                     <input
@@ -185,7 +197,7 @@ export function RegisterForm({
                         type={showPassword ? 'text' : 'password'}
                         value={formData.password}
                         onChange={handleChange}
-                        placeholder={t.auth.register.password}
+                        placeholder={registerText.password ?? "Password"}
                         className={`w-full px-3 py-2 bg-slate-800 border rounded-lg focus:outline-none transition-colors ${
                             errors.password ? 'border-red-600' : 'border-slate-700 focus:border-primary'
                         }`}
@@ -200,12 +212,12 @@ export function RegisterForm({
                     </button>
                 </div>
                 {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
-                <p className="text-gray-400 text-xs mt-1">{t.auth.register.passwordHelp}</p>
+                <p className="text-gray-400 text-xs mt-1">{registerText.passwordHelp ?? "Use at least 8 characters and 3 character types"}</p>
             </div>
 
             <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
-                    {t.auth.register.confirmPassword}
+                    {registerText.confirmPassword ?? "Confirm password"}
                 </label>
                 <input
                     id="confirmPassword"
@@ -213,7 +225,7 @@ export function RegisterForm({
                     type={showPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    placeholder={t.auth.register.confirmPassword}
+                    placeholder={registerText.confirmPassword ?? "Confirm password"}
                     className={`w-full px-3 py-2 bg-slate-800 border rounded-lg focus:outline-none transition-colors ${
                         errors.confirmPassword ? 'border-red-600' : 'border-slate-700 focus:border-primary'
                     }`}
@@ -229,18 +241,18 @@ export function RegisterForm({
                 disabled={loading}
                 className="w-full py-2 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
             >
-                {loading ? t.auth.register.loading : t.auth.register.submit}
+                {loading ? (registerText.loading ?? t.common.loading) : (registerText.submit ?? "Create account")}
             </button>
 
             {showLoginLink && (
                 <div className="text-center text-sm pt-4">
-                    <span className="text-gray-400">{t.auth.register.hasAccount} </span>
+                    <span className="text-gray-400">{registerText.hasAccount ?? "Already have an account?"} </span>
                     <button
                         type="button"
-                        onClick={() => navigate(getLocalizedPath('/auth?action=login'))}
+                        onClick={() => openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
                         className="text-primary hover:underline"
                     >
-                        {t.auth.register.signIn}
+                        {registerText.signIn ?? "Sign in"}
                     </button>
                 </div>
             )}

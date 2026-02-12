@@ -30,7 +30,7 @@ const pathImages: Record<string, string> = {
 };
 
 export function VictorySection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const section = t.home.sections.victory;
   const [expandedPath, setExpandedPath] = useState<string | null>(null);
   const [activeCard, setActiveCard] = useState(0);
@@ -161,6 +161,7 @@ export function VictorySection() {
             title={section.title}
             accent={section.accentWord}
             subtitle={section.subtitle}
+            tone="cta"
           />
         </div>
 
@@ -202,7 +203,11 @@ export function VictorySection() {
                     ? "w-6 bg-primary" 
                     : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                 )}
-                aria-label={`Aller à la voie ${idx + 1}`}
+                aria-label={
+                  language === "fr"
+                    ? `Aller à la voie ${idx + 1}`
+                    : `Go to path ${idx + 1}`
+                }
               />
             ))}
           </div>
@@ -262,7 +267,7 @@ function VictoryCard({ path, isExpanded, onToggle, translations, isMobile = fals
   const contentRef = useRef<HTMLDivElement>(null);
 
   const Icon = pathIcons[path.id] || Swords;
-  const image = pathImages[path.id];
+  const image = pathImages[path.id] || militaryImg;
 
   // GSAP-powered premium tilt effect
   useEffect(() => {
