@@ -83,6 +83,7 @@ export function CommunitySection() {
             title={section.title}
             accent={section.accentWord}
             subtitle={section.subtitle}
+            tone="cta"
           />
         </div>
 

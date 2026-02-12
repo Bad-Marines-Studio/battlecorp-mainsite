@@ -119,7 +119,11 @@ export function FinalCTASection() {
 
           {/* CTAs with premium buttons */}
           <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-            <Link to={`/${language}/auth`} className="btn-bc btn-cta-primary btn-bc--lg">
+            <Link
+              to={`/${language}/auth`}
+              className="btn-bc btn-cta-primary btn-bc--lg"
+              data-ui-sound="play"
+            >
               {section.ctaPrimary}
             </Link>
             <a href="#how-to-play" className="btn-bc btn-cta-secondary btn-bc--lg">

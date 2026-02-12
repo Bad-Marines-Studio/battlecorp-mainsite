@@ -5,6 +5,7 @@ export function LanguageSwitch() {
   const { language, setLanguage, t } = useLanguage();
 
   const isFr = language === "fr";
+  const springEase = "cubic-bezier(0.34,1.56,0.64,1)";
 
   return (
     <div
@@ -23,9 +24,10 @@ export function LanguageSwitch() {
           "absolute top-1 bottom-1 w-[calc(50%-4px)]",
           "bg-primary rounded-full",
           "shadow-[0_0_12px_hsl(var(--primary)/0.5),0_0_24px_hsl(var(--primary)/0.3)]",
-          "transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+          "transition-all duration-300",
           isFr ? "left-1" : "left-[calc(50%+2px)]"
         )}
+        style={{ transitionTimingFunction: springEase }}
         aria-hidden="true"
       />
 

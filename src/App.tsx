@@ -2,9 +2,6 @@ import type { ReactNode } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { PrivateRoute } from "@/components/PrivateRoute";
-import { PublicRoute } from "@/components/PublicRoute";
-import { AuthProvider } from "@/context/AuthContext";
 import { VALID_LANGUAGES, defaultLanguage, type Language } from "@/i18n";
 import Home from "@/pages/Home";
 import AuthShell from "@/pages/AuthShell";
@@ -36,63 +33,47 @@ function LanguageGuard({ children }: { children: ReactNode }) {
 function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            {/* Root redirect */}
-            <Route path="/" element={<Navigate to={`/${defaultLanguage}`} replace />} />
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <Routes>
+          {/* Root redirect */}
+          <Route path="/" element={<Navigate to={`/${defaultLanguage}`} replace />} />
 
-            {/* Language-prefixed routes */}
-            <Route
-              path="/:lang"
-              element={
-                <LanguageGuard>
-                  <Layout />
-                </LanguageGuard>
-              }
-            >
-              {/* Home */}
-              <Route index element={<Home />} />
+          {/* Language-prefixed routes */}
+          <Route
+            path="/:lang"
+            element={
+              <LanguageGuard>
+                <Layout />
+              </LanguageGuard>
+            }
+          >
+            {/* Home */}
+            <Route index element={<Home />} />
 
-              {/* Auth */}
-              <Route
-                path="auth"
-                element={
-                  <PublicRoute>
-                    <AuthShell />
-                  </PublicRoute>
-                }
-              />
+            {/* Auth */}
+            <Route path="auth" element={<AuthShell />} />
 
-              {/* Legacy auth redirects */}
-              <Route path="login" element={<Navigate to="../auth" replace />} />
-              <Route path="signup" element={<Navigate to="../auth" replace />} />
-              <Route path="forgot-password" element={<Navigate to="../auth" replace />} />
+            {/* Legacy auth redirects */}
+            <Route path="login" element={<Navigate to="../auth" replace />} />
+            <Route path="signup" element={<Navigate to="../auth" replace />} />
+            <Route path="forgot-password" element={<Navigate to="../auth" replace />} />
 
-              {/* App placeholder - Protected */}
-              <Route
-                path="app"
-                element={
-                  <PrivateRoute>
-                    <AppPlaceholder />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="dashboard" element={<Navigate to="../app" replace />} />
+            {/* App placeholder */}
+            <Route path="app" element={<AppPlaceholder />} />
+            <Route path="dashboard" element={<Navigate to="../app" replace />} />
 
-              {/* Legal pages */}
-              <Route path="terms" element={<Terms />} />
-              <Route path="privacy" element={<Privacy />} />
-              <Route path="cookies" element={<Cookies />} />
+            {/* Legal pages */}
+            <Route path="terms" element={<Terms />} />
+            <Route path="privacy" element={<Privacy />} />
+            <Route path="cookies" element={<Cookies />} />
 
-              {/* 404 within language scope */}
-              <Route path="*" element={<NotFound />} />
-            </Route>
-
-            {/* Global 404 - outside language scope */}
+            {/* 404 within language scope */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
+          </Route>
+
+          {/* Global 404 - outside language scope */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </ErrorBoundary>
   );

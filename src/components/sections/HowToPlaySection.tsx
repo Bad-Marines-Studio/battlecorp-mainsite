@@ -278,6 +278,7 @@ export function HowToPlaySection() {
             title={section.title}
             accent={section.accentWord}
             subtitle={section.subtitle}
+            tone="cta"
           />
         </div>
 
@@ -336,7 +337,7 @@ export function HowToPlaySection() {
                 className={`
                   text-left p-5 rounded-lg border transition-all duration-300
                   ${isNext ? 'border-primary/50' : 'border-border'} 
-                  bg-card hover:border-primary/70 hover:bg-primary/5
+                  bg-card hover:border-primary/70 hover:bg-primary/5 hover:shadow-[0_0_24px_hsl(var(--primary)/0.15)] hover:-translate-y-0.5
                   relative overflow-hidden group
                 `}
                 style={{ gridArea }}
@@ -412,19 +413,25 @@ export function HowToPlaySection() {
 
           {/* Tactical Advice Tile (Bottom Left) */}
           <div 
-            className="rounded-lg border border-border bg-card/50 p-5 flex flex-col justify-center relative overflow-hidden"
+            className="
+              rounded-lg border border-accent/35
+              bg-gradient-to-br from-accent/18 via-card/88 to-card/72
+              p-5 flex flex-col justify-center relative overflow-hidden cursor-default
+              shadow-[inset_0_0_0_1px_hsl(var(--accent)/0.16)]
+            "
             style={{ gridArea: 'bl' }}
           >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,hsl(var(--accent)/0.2),transparent_46%)] pointer-events-none" />
             {/* HUD decoration */}
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/60 via-primary/30 to-transparent" />
-            <div className="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-primary/60 via-primary/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent/70 via-accent/40 to-transparent" />
+            <div className="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-accent/70 via-accent/40 to-transparent" />
             
-            <p className="text-xs font-semibold tracking-wider uppercase text-primary mb-3">
+            <p className="text-xs font-semibold tracking-wider uppercase text-accent mb-3 relative z-10">
               {section.tacticalAdvice.label}
             </p>
             <p 
               ref={tacticalAdviceRef}
-              className="text-sm italic text-muted-foreground leading-relaxed"
+              className="text-sm italic text-foreground/80 leading-relaxed relative z-10"
             >
               {section.tacticalAdvice.quotes[activeStep]}
             </p>
@@ -525,6 +532,7 @@ function MobileHowToPlay({ section }: { section: ReturnType<typeof useLanguage>[
             title={section.title}
             accent={section.accentWord}
             subtitle={section.subtitle}
+            tone="cta"
           />
         </div>
 
@@ -615,12 +623,13 @@ function MobileHowToPlay({ section }: { section: ReturnType<typeof useLanguage>[
         </div>
 
         {/* Tactical Advice */}
-        <div className="mt-6 p-4 rounded-lg border border-border bg-card/50 relative overflow-hidden animate-scroll">
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/60 via-primary/30 to-transparent" />
-          <p className="text-xs font-semibold tracking-wider uppercase text-primary mb-2">
+        <div className="mt-6 p-4 rounded-lg border border-accent/35 bg-gradient-to-br from-accent/18 via-card/88 to-card/72 relative overflow-hidden animate-scroll shadow-[inset_0_0_0_1px_hsl(var(--accent)/0.16)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,hsl(var(--accent)/0.2),transparent_46%)] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent/70 via-accent/40 to-transparent" />
+          <p className="text-xs font-semibold tracking-wider uppercase text-accent mb-2 relative z-10">
             {section.tacticalAdvice.label}
           </p>
-          <p className="text-sm italic text-muted-foreground">
+          <p className="text-sm italic text-foreground/80 relative z-10">
             {section.tacticalAdvice.quotes[activeIndex]}
           </p>
         </div>

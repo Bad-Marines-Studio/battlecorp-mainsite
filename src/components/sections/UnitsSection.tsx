@@ -97,7 +97,7 @@ function CostItem({
 }
 
 export function UnitsSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const section = t.home.sections.units;
   const [activeUnit, setActiveUnit] = useState(0);
 
@@ -240,6 +240,7 @@ export function UnitsSection() {
             title={section.title}
             accent={section.accentWord}
             subtitle={section.subtitle}
+            tone="cta"
           />
         </div>
 
@@ -283,7 +284,7 @@ export function UnitsSection() {
                         </div>
                         
                         <Badge
-                          variant={unit.role === "defensive" ? "secondary" : "default"}
+                          variant={unit.role === "terrestrial" ? "secondary" : "default"}
                           className="text-xs mb-3"
                         >
                           {section.roles[unit.role]}
@@ -398,7 +399,11 @@ export function UnitsSection() {
                     ? "bg-primary w-6" 
                     : "bg-muted-foreground/30 w-2 hover:bg-muted-foreground/50"
                 )}
-                aria-label={`Go to unit ${idx + 1}`}
+                aria-label={
+                  language === "fr"
+                    ? `Aller à l'unité ${idx + 1}`
+                    : `Go to unit ${idx + 1}`
+                }
               />
             ))}
           </div>
@@ -454,7 +459,7 @@ export function UnitsSection() {
                           {unit.name}
                         </span>
                         <Badge
-                          variant={unit.role === "defensive" ? "secondary" : "default"}
+                          variant={unit.role === "terrestrial" ? "secondary" : "default"}
                           className="text-[10px] px-1.5 py-0 shrink-0"
                         >
                           {section.roles[unit.role]}
@@ -544,7 +549,7 @@ export function UnitsSection() {
                 </Badge>
               </div>
               <Badge
-                variant={currentUnit.role === "defensive" ? "secondary" : "default"}
+                variant={currentUnit.role === "terrestrial" ? "secondary" : "default"}
                 className="text-xs mb-3"
               >
                 {section.roles[currentUnit.role]}

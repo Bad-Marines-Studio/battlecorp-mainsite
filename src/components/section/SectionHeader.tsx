@@ -28,7 +28,7 @@ function renderTitleWithAccent(title: string, accent: string, isCta: boolean) {
 
   // Fail-safe: if accent not found, return title as-is
   if (matchIndex === -1) {
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       console.warn(
         `[SectionHeader] Accent word "${accent}" not found in title "${title}"`
       );

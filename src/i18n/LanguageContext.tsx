@@ -15,7 +15,6 @@ import {
   type Language,
 } from "./translations";
 import type { TranslationKeys } from "./fr";
-import { setCurrentLanguage } from "./languageManager";
 
 interface LanguageContextType {
   language: Language;
@@ -44,10 +43,9 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const t = useMemo(() => translations[language], [language]);
 
-  // Update document lang attribute and global language manager
+  // Update document lang attribute
   useEffect(() => {
     document.documentElement.lang = language;
-    setCurrentLanguage(language);
   }, [language]);
 
 

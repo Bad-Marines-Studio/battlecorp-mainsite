@@ -3,8 +3,11 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { ScrollToTop } from "./ScrollToTop";
 import { LanguageProvider } from "@/i18n";
+import { useUiButtonSounds } from "@/hooks/useUiButtonSounds";
 
 export function Layout() {
+  useUiButtonSounds();
+
   return (
     <LanguageProvider>
       <ScrollToTop />

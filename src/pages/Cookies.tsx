@@ -9,6 +9,10 @@ export default function Cookies() {
   const { t, language } = useLanguage();
   const location = useLocation();
   const legal = t.legal.cookies;
+  const bodyParagraphs = legal.body
+    .split("\n\n")
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
 
   useEffect(() => {
     setDocumentMeta({
@@ -31,7 +35,11 @@ export default function Cookies() {
           </p>
           <p className="text-muted-foreground mb-6">{legal.intro}</p>
           <div className="prose prose-invert max-w-none">
-            <p className="text-muted-foreground">{legal.body}</p>
+            {bodyParagraphs.map((paragraph, index) => (
+              <p key={index} className="text-muted-foreground whitespace-pre-line">
+                {paragraph}
+              </p>
+            ))}
           </div>
         </div>
       </Container>

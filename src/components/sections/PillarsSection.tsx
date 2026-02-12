@@ -51,7 +51,7 @@ interface PillarCardProps {
 
 function PillarCard({ pillar, expanded, onToggle, takeawayLabel, mobileLabels }: PillarCardProps) {
   const Icon = pillarIcons[pillar.id] || Map;
-  const image = pillarImages[pillar.id];
+  const image = pillarImages[pillar.id] || pillarConquest;
 
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden mx-2">
@@ -123,7 +123,7 @@ function PillarCard({ pillar, expanded, onToggle, takeawayLabel, mobileLabels }:
 }
 
 export function PillarsSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const section = t.home.sections.pillars;
   const [activePillar, setActivePillar] = useState(0);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
@@ -278,8 +278,9 @@ export function PillarsSection() {
     };
   }, [carouselApi]);
 
-  const currentPillar = section.items[activePillar];
-  const currentImage = pillarImages[currentPillar.id];
+  const currentPillar = section.items[activePillar] || section.items[0];
+  if (!currentPillar) return null;
+  const currentImage = pillarImages[currentPillar.id] || pillarConquest;
   const PillarIcon = pillarIcons[currentPillar.id] || Map;
 
   return (
@@ -292,6 +293,7 @@ export function PillarsSection() {
             title={section.title}
             accent={section.accentWord}
             subtitle={section.subtitle}
+            tone="cta"
           />
         </div>
 
@@ -330,7 +332,11 @@ export function PillarsSection() {
                     ? "w-6 bg-primary" 
                     : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                 )}
-                aria-label={`Aller au pilier ${idx + 1}`}
+                aria-label={
+                  language === "fr"
+                    ? `Aller au pilier ${idx + 1}`
+                    : `Go to pillar ${idx + 1}`
+                }
               />
             ))}
           </div>

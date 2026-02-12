@@ -10,6 +10,8 @@ interface HamburgerIconProps {
  * Features glassmorphism background, glowing bars, and smooth CSS animations.
  */
 export function HamburgerIcon({ isOpen, className }: HamburgerIconProps) {
+  const smoothEase = "cubic-bezier(0.4,0,0.2,1)";
+
   return (
     <div
       className={cn(
@@ -31,7 +33,7 @@ export function HamburgerIcon({ isOpen, className }: HamburgerIconProps) {
           className={cn(
             "block h-0.5 rounded-full",
             "bg-current",
-            "transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]",
+            "transition-all duration-300",
             "origin-center",
             // Width animation for style
             isOpen ? "w-full" : "w-full",
@@ -39,6 +41,7 @@ export function HamburgerIcon({ isOpen, className }: HamburgerIconProps) {
             // Glow effect when open
             isOpen && "shadow-[0_0_6px_hsl(var(--primary)/0.6)]"
           )}
+          style={{ transitionTimingFunction: smoothEase }}
         />
         
         {/* Middle bar */}
@@ -46,10 +49,11 @@ export function HamburgerIcon({ isOpen, className }: HamburgerIconProps) {
           className={cn(
             "block h-0.5 rounded-full",
             "bg-current",
-            "transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]",
+            "transition-all duration-300",
             // Shrink from center and fade
             isOpen ? "w-0 opacity-0" : "w-3/4 opacity-100 ml-auto"
           )}
+          style={{ transitionTimingFunction: smoothEase }}
         />
         
         {/* Bottom bar */}
@@ -57,13 +61,14 @@ export function HamburgerIcon({ isOpen, className }: HamburgerIconProps) {
           className={cn(
             "block h-0.5 rounded-full",
             "bg-current",
-            "transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]",
+            "transition-all duration-300",
             "origin-center",
             isOpen ? "w-full" : "w-1/2",
             isOpen && "-translate-y-[7px] -rotate-45",
             // Glow effect when open
             isOpen && "shadow-[0_0_6px_hsl(var(--primary)/0.6)]"
           )}
+          style={{ transitionTimingFunction: smoothEase }}
         />
       </div>
 
