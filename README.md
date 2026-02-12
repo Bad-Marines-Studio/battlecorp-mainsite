@@ -1,73 +1,93 @@
-# Welcome to your Lovable project
+# battlecorp-mainsite
 
-## Project info
+A react app to for the Battlecorp website.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Installation
 
-## How can I edit this code?
+This repository is setup to handle development via Visual Studio Code on Windows.
+https://code.visualstudio.com/
 
-There are several ways of editing your application.
+You need to have Docker engine running if you want to enable backend client auto compilation :
+https://www.docker.com/
 
-**Use Lovable**
+NodeJS & npm needs to be installed:
+https://nodejs.org
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Clone the repository via Git or GithubDesktop
+https://git-scm.com/
+https://desktop.github.com/
 
-Changes made via Lovable will be committed automatically to this repo.
+To install dependencies you need to run:
 
-**Use your preferred IDE**
+```bat
+npm install
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Development
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+It's advised to link the app to a local backend server while tweaking.
+Or at worst, the preproduction server.
 
-Follow these steps:
+See this repository for how to run the backend server locally :
+https://github.com/Fedcom-Battlecorp/horizon-back
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Start the application in development mode by running:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bat
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Or by using the provided launch.json file to launch debugs from VsCode UI.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Backend client auto-generation
 
-**Use GitHub Codespaces**
+A prelaunch script ( swagger:prestart ) is setup on the run dev command.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+It'll automatically try to update & recompile your local API client, if certain conditions are matched :
+- Docker engine is running.
+- http://localhost:3000/api-json is responding with an open api spec
 
-## What technologies are used for this project?
+The client is generated via a bat file: ./swagger/swagger_codegen_docker.bat, then packaged and installed with npm.
 
-This project is built with:
+You can force the client update & recompilation by running:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bat
+npm run swagger:forcegen
+```
 
-## How can I deploy this project?
+## Environment
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+The app requires some local .env files to be setup:
+- .env.local
+- .env.preprod.local
+- .env.production.local
 
-## Can I connect a custom domain to my Lovable project?
+Each will be selected with the 'mode' used while building the app.
 
-Yes, you can!
+```
+PORT=__Server_Port__
+VITE_ENV='development' || 'production'
+VITE_API_URL=__API_URL__
+VITE_WEB_BASE_URL=__WEB_BASE_URL__
+VITE_ROUTE_PATH_HOME='/preprod/'
+VITE_ROUTE_PATH_PASSWORD_RESET='/preprod/password-reset/'
+VITE_ROUTE_PATH_EMAIL_VALIDATION='/preprod/email-validation/'
+VITE_ROUTE_PATH_GAME='/preprod/game/'
+VITE_ROUTE_PATH_GAME_PLAY='/preprod/game/play/'
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## How to build / deploy
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+The app needs to be built before deploying, use those commands to select target mode:
+
+*Preprod*:
+```
+npm run build:preprod
+```
+
+*Production*:
+```
+npm run build:production
+```
+
+Each will end up in a different /dist folder, that you need to deploy to the website FTP.
