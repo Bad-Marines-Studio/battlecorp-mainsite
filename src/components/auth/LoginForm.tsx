@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { authController } from '@/api/controllers/authController';
 import { ApiSingletons } from '@/api/apiSingletons';
 import { UserLoginDto } from '@bad-marines-studio/bch-react-rest-client';
 import { Logger } from '@/utils/logger';
+import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS } from '@/constants/auth';
 
 interface LoginFormProps {
     onSuccess?: () => void;
@@ -17,7 +18,11 @@ export function LoginForm({
     showRegisterLink = true,
     showForgotPasswordLink = true,
 }: LoginFormProps) {
-    const { t, getLocalizedPath } = useLanguage();
+    const { t } = useLanguage();
+    const location = useLocation();
+    const authAny = t.auth as any;
+    const authErrors = authAny.errors ?? {};
+    const loginText = authAny.login ?? {};
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -28,6 +33,12 @@ export function LoginForm({
     });
 
     const isFormValid = formData.loginOrEmail && formData.password;
+
+    const openAuthAction = (nextAction: string) => {
+        const params = new URLSearchParams(location.search);
+        params.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, nextAction);
+        navigate(`${location.pathname}?${params.toString()}${location.hash}`);
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -68,9 +79,9 @@ export function LoginForm({
             if (err.response?.status === 401) {
                 const message = err.response.data?.message;
                 if (['Created account', 'Banned account', 'Disabled account'].includes(message)) {
-                    setError(t.auth.errors[message] || t.auth.login.error);
+                    setError(authErrors[message] || loginText.error || t.common.error);
                 } else {
-                    setError(t.auth.login.error);
+                    setError(loginText.error || t.common.error);
                 }
             } else if (err.response) {
                 setError(t.common.error);
@@ -136,7 +147,7 @@ export function LoginForm({
                 disabled={!isFormValid || loading}
                 className="w-full py-2 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
             >
-                {loading ? t.auth.login.loading : t.auth.login.submit}
+                {loading ? (loginText.loading ?? t.common.loading) : t.auth.login.submit}
             </button>
 
             <div className="space-y-2 text-center text-sm pt-4">
@@ -145,7 +156,7 @@ export function LoginForm({
                         <span className="text-gray-400">{t.auth.login.noAccount} </span>
                         <button
                             type="button"
-                            onClick={() => navigate(getLocalizedPath('/auth?action=register'))}
+                            onClick={() => openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER)}
                             className="text-primary hover:underline"
                         >
                             {t.auth.login.createAccount}
@@ -156,7 +167,7 @@ export function LoginForm({
                     <div>
                         <button
                             type="button"
-                            onClick={() => navigate(getLocalizedPath('/auth?action=password-reset'))}
+                            onClick={() => openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.PASSWORD_RESET)}
                             className="text-primary hover:underline"
                         >
                             {t.auth.login.forgotPassword}

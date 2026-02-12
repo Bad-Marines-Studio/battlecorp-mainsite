@@ -4,6 +4,7 @@ import { Footer } from "./Footer";
 import { ScrollToTop } from "./ScrollToTop";
 import { LanguageProvider } from "@/i18n";
 import { useUiButtonSounds } from "@/hooks/useUiButtonSounds";
+import { AuthModal } from "@/components/auth/AuthModal";
 
 export function Layout() {
   useUiButtonSounds();
@@ -17,6 +18,7 @@ export function Layout() {
           <Outlet />
         </main>
         <Footer />
+        <AuthModal />
       </div>
     </LanguageProvider>
   );

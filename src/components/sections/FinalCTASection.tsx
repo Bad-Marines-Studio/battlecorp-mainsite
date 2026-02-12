@@ -10,7 +10,7 @@ import { SectionHeader } from "@/components/section/SectionHeader";
 gsap.registerPlugin(ScrollTrigger);
 
 export function FinalCTASection() {
-  const { t, language } = useLanguage();
+  const { t, getLocalizedPath } = useLanguage();
   const section = t.home.sections.cta;
 
   // Refs for ScrollTrigger animations
@@ -120,7 +120,7 @@ export function FinalCTASection() {
           {/* CTAs with premium buttons */}
           <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
             <Link
-              to={`/${language}/auth`}
+              to={getLocalizedPath("/?action=login")}
               className="btn-bc btn-cta-primary btn-bc--lg"
               data-ui-sound="play"
             >

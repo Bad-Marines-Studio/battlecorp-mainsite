@@ -27,7 +27,7 @@ type HeroParticle = {
 };
 
 export function HeroSection() {
-  const { t, language } = useLanguage();
+  const { t, getLocalizedPath } = useLanguage();
   const hero = t.home.sections.hero;
   const isMobile = useIsMobile();
 
@@ -460,7 +460,7 @@ export function HeroSection() {
           {/* CTAs with premium buttons */}
           <div ref={ctaContainerRef} className="flex flex-col sm:flex-row gap-4 mb-10 will-change-transform">
             <Link
-              to={`/${language}/auth`}
+              to={getLocalizedPath("/?action=login")}
               className="btn-bc btn-cta-primary btn-bc--md group"
               data-ui-sound="play"
             >

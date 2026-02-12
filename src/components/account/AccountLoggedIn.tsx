@@ -6,6 +6,7 @@ import { useLanguage } from '@/i18n';
 export function AccountLoggedIn() {
     const { user } = useAuth();
     const { t } = useLanguage();
+    const accountText = (t.auth as any).account ?? {};
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -48,7 +49,7 @@ export function AccountLoggedIn() {
                         disabled={isLoading}
                         className="w-full text-left px-4 py-3 text-sm hover:bg-slate-800 transition-colors disabled:opacity-50"
                     >
-                        {isLoading ? t.auth.account.logoutLoading : t.auth.account.logout}
+                        {isLoading ? (accountText.logoutLoading ?? t.common.loading) : (accountText.logout ?? t.nav.logout)}
                     </button>
                 </div>
             )}
