@@ -6,16 +6,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 import { PasswordResetRequestForm } from "./PasswordResetRequestForm";
-import { PasswordResetForm } from "./PasswordResetForm";
-import { EmailValidationForm } from "./EmailValidationForm";
 import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS, APP_SEARCH_PARAM_TOKEN } from "@/constants/auth";
 
 const MODAL_ACTIONS = new Set<string>([
   APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN,
   APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER,
   APP_SEARCH_PARAM_HOME_ACTIONS.PASSWORD_RESET,
-  "password-reset-token",
-  "email-validation",
 ]);
 
 export function AuthModal() {
@@ -26,6 +22,7 @@ export function AuthModal() {
 
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const action = searchParams.get(APP_SEARCH_PARAM_HOME_KEYS.ACTION);
+  const token = searchParams.get(APP_SEARCH_PARAM_TOKEN);
   const isOpen = Boolean(action && MODAL_ACTIONS.has(action));
 
   const closeModal = () => {
@@ -36,6 +33,21 @@ export function AuthModal() {
     const nextPath = `${location.pathname}${nextSearch ? `?${nextSearch}` : ""}${location.hash}`;
     navigate(nextPath, { replace: true });
   };
+
+  useEffect(() => {
+    if (action !== "password-reset-token" && action !== "email-validation") return;
+
+    const nextParams = new URLSearchParams();
+    if (token) nextParams.set(APP_SEARCH_PARAM_TOKEN, token);
+    const suffix = nextParams.toString() ? `?${nextParams.toString()}` : "";
+
+    if (action === "password-reset-token") {
+      navigate(`${getLocalizedPath("/reset-password")}${suffix}`, { replace: true });
+      return;
+    }
+
+    navigate(`${getLocalizedPath("/validate-email")}${suffix}`, { replace: true });
+  }, [action, token, navigate, getLocalizedPath]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -59,7 +71,7 @@ export function AuthModal() {
 
   useEffect(() => {
     if (!authenticated || !isOpen) return;
-    navigate(getLocalizedPath("/app"), { replace: true });
+    navigate(getLocalizedPath("/game"), { replace: true });
   }, [authenticated, isOpen, navigate, getLocalizedPath]);
 
   if (!isOpen || !action) return null;
@@ -67,10 +79,9 @@ export function AuthModal() {
   const authAny = t.auth as any;
   const registerText = authAny.register ?? authAny.signup ?? {};
   const passwordResetText = authAny.passwordReset ?? {};
-  const emailValidationText = authAny.emailValidation ?? {};
 
   const handleLoginSuccess = () => {
-    navigate(getLocalizedPath("/app"), { replace: true });
+    navigate(getLocalizedPath("/game"), { replace: true });
   };
 
   let title = t.auth.login.title;
@@ -82,12 +93,6 @@ export function AuthModal() {
   } else if (action === APP_SEARCH_PARAM_HOME_ACTIONS.PASSWORD_RESET) {
     title = passwordResetText.title ?? t.auth.login.forgotPassword;
     content = <PasswordResetRequestForm />;
-  } else if (action === "password-reset-token") {
-    title = passwordResetText.tokenTitle ?? passwordResetText.title ?? t.auth.login.forgotPassword;
-    content = <PasswordResetForm />;
-  } else if (action === "email-validation") {
-    title = emailValidationText.title ?? t.authShell.title;
-    content = <EmailValidationForm />;
   }
 
   return (

@@ -10,8 +10,14 @@ export default defineConfig(({ mode }) => {
     // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
     // https://vitejs.dev/guide/env-and-mode.html#modes
     const env = loadEnv(mode, process.cwd(), '');
+    const appBase = mode === "preprod" ? "/react-preprod/" : "/";
 
     return {
+        base: appBase,
+        build: {
+            outDir: `dist/${mode}`,
+            emptyOutDir: true,
+        },
         define: {
             'process.env': process.env,
         },
@@ -20,6 +26,13 @@ export default defineConfig(({ mode }) => {
             port: parseInt(env.PORT),
             hmr: {
                 overlay: false,
+            },
+            proxy: {
+                "/utest": {
+                    target: "https://battlecorp.com",
+                    changeOrigin: true,
+                    secure: true,
+                },
             },
         },
         plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),

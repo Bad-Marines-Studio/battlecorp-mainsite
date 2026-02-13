@@ -14,7 +14,7 @@ import {
   getLocalizedPath as getLocalizedPathFn,
   type Language,
 } from "./translations";
-import type { TranslationKeys } from "./fr";
+import type { TranslationKeys } from "./translationKeys";
 
 interface LanguageContextType {
   language: Language;
@@ -57,7 +57,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       language,
       targetLang
     );
-    
+
     // Preserve search and hash
     const fullPath = `${newPath}${location.search}${location.hash}`;
     navigate(fullPath, { replace: true });

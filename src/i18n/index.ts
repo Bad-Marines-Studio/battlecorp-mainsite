@@ -9,4 +9,4 @@ export {
   stripLanguagePrefix,
   type Language,
 } from "./translations";
-export type { TranslationKeys } from "./fr";
+export type { TranslationKeys } from "./translationKeys.ts";

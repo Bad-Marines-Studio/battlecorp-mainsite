@@ -68,12 +68,8 @@ Each will be selected with the 'mode' used while building the app.
 PORT=__Server_Port__
 VITE_ENV='development' || 'production'
 VITE_API_URL=__API_URL__
-VITE_WEB_BASE_URL=__WEB_BASE_URL__
-VITE_ROUTE_PATH_HOME='/preprod/'
-VITE_ROUTE_PATH_PASSWORD_RESET='/preprod/password-reset/'
-VITE_ROUTE_PATH_EMAIL_VALIDATION='/preprod/email-validation/'
-VITE_ROUTE_PATH_GAME='/preprod/game/'
-VITE_ROUTE_PATH_GAME_PLAY='/preprod/game/play/'
+VITE_LOG_LEVELS='verbose,log,warn,error'
+VITE_UNITY_ACTIVE_VERSION_URL='/utest/activeVersion.json' || '/uprod/activeVersion.json'
 ```
 
 ## How to build / deploy
