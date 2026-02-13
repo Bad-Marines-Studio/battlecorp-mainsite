@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { useLanguage } from "@/i18n";
 import { EXTERNAL_LINKS, getWhitepaperUrl } from "@/config/links";
@@ -7,11 +7,13 @@ import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS } from "@/con
 import { LanguageSwitch } from "./LanguageSwitch";
 import { HamburgerIcon } from "./HamburgerIcon";
 import { Container } from "./Container";
+import { AccountManager } from "./account/AccountManager";
 import logo from "@/assets/battlecorp_logo.webp";
 
 export function Header() {
   const { t, language, getLocalizedPath } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
 
@@ -139,6 +141,11 @@ export function Header() {
     return `${location.pathname}?${params.toString()}${location.hash}`;
   };
 
+  const handleAuthAction = (action: string) => {
+    setIsOpen(false);
+    navigate(getAuthModalLink(action));
+  };
+
   return (
     <>
       <header
@@ -164,76 +171,82 @@ export function Header() {
         </div>
 
         <Container>
-          <div className="flex items-center justify-between">
-            {/* Logo & Brand */}
-            <Link
-              to={getLocalizedPath("/")}
-              className="flex items-center gap-3 group"
-            >
-              <img
-                src={logo}
-                alt="BattleCorp"
-                className="h-10 w-10 transition-transform duration-300 group-hover:scale-105"
-              />
-              <span className="text-xl font-bold tracking-wider text-foreground">
-                {t.header.brand}
-              </span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-6">
-              {externalLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    text-sm text-muted-foreground 
-                    hover:text-primary transition-colors duration-200
-                    relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px
-                    after:bg-primary after:transition-all after:duration-300
-                    hover:after:w-full
-                  "
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-
-            {/* Desktop Actions */}
-            <div className="hidden md:flex items-center gap-4">
-              <LanguageSwitch />
+          <div className="flex w-full items-center gap-4">
+            <div className="flex items-center gap-4">
+              {/* Logo */}
               <Link
-                to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                to={getLocalizedPath("/")}
+                className="flex items-center gap-3 group"
               >
-                {t.nav.login}
+                <img
+                  src={logo}
+                  alt="BattleCorp"
+                  className="h-10 w-10 transition-transform duration-300 group-hover:scale-105"
+                />
+                <span className="hidden text-xl font-bold tracking-wider text-foreground md:inline">
+                  {t.header.brand}
+                </span>
               </Link>
-              <Link
-                to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER)}
-                className="btn-bc btn-cta-primary btn-bc--sm"
+
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center gap-6">
+                {externalLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      text-sm text-muted-foreground 
+                      hover:text-primary transition-colors duration-200
+                      relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px
+                      after:bg-primary after:transition-all after:duration-300
+                      hover:after:w-full
+                    "
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+
+              {/* Mobile Burger - left aligned */}
+              <button
+                ref={triggerRef}
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="
+                  md:hidden text-foreground
+                  transition-colors duration-200
+                  hover:text-primary
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full
+                "
+                aria-label={isOpen ? t.common.close : t.header.menuOpen}
+                aria-expanded={isOpen}
               >
-                {t.nav.signup}
-              </Link>
+                <HamburgerIcon isOpen={isOpen} />
+              </button>
             </div>
 
-            {/* Mobile Menu Button with animated hamburger */}
-            <button
-              ref={triggerRef}
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className="
-                md:hidden text-foreground
-                transition-colors duration-200
-                hover:text-primary
-                focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full
-              "
-              aria-label={isOpen ? t.common.close : t.header.menuOpen}
-              aria-expanded={isOpen}
-            >
-              <HamburgerIcon isOpen={isOpen} />
-            </button>
+            <div className="ml-auto flex items-center gap-4">
+              <div className="h-6 w-px bg-primary/20 opacity-80" />
+              {/* Desktop Actions */}
+              <div className="hidden md:flex items-center gap-4">
+                <LanguageSwitch />
+                <AccountManager
+                  onLoginClick={() => handleAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
+                  onRegisterClick={() => handleAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER)}
+                />
+              </div>
+
+              {/* Mobile Actions (right aligned) */}
+              <div className="flex items-center gap-3 md:hidden">
+                <LanguageSwitch />
+                <AccountManager
+                  onLoginClick={() => handleAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
+                  onRegisterClick={() => handleAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER)}
+                />
+              </div>
+            </div>
           </div>
         </Container>
       </header>
@@ -257,11 +270,11 @@ export function Header() {
             ref={menuRef}
             tabIndex={-1}
             className="
-              fixed right-0 top-0 bottom-0 w-full max-w-sm 
+              fixed left-0 top-0 bottom-0 w-full max-w-sm 
               bg-background/80 backdrop-blur-2xl
-              border-l border-primary/20
+              border-r border-primary/20
               md:hidden z-[70] overflow-y-auto
-              animate-slide-in-right
+              animate-in slide-in-from-left-2 duration-300
             "
             role="dialog"
             aria-modal="true"
@@ -304,10 +317,6 @@ export function Header() {
             </div>
 
             <div className="flex flex-col p-6 gap-6">
-              {/* Language Switch */}
-              <div className="flex justify-center">
-                <LanguageSwitch />
-              </div>
 
               {/* Links Section */}
               <div>
@@ -369,34 +378,6 @@ export function Header() {
                 </div>
               </div>
 
-              {/* Auth Actions */}
-              <div 
-                className="
-                  flex flex-col gap-3 pt-4 border-t border-border/50
-                  opacity-0 animate-fade-in
-                "
-                style={{ animationDelay: "600ms", animationFillMode: "forwards" }}
-              >
-                <Link
-                  to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN)}
-                  onClick={() => setIsOpen(false)}
-                  className="
-                    w-full py-3 text-center text-foreground 
-                    glass-sm rounded-md 
-                    hover:border-primary/40 
-                    transition-all duration-300
-                  "
-                >
-                  {t.nav.login}
-                </Link>
-                <Link
-                  to={getAuthModalLink(APP_SEARCH_PARAM_HOME_ACTIONS.REGISTER)}
-                  onClick={() => setIsOpen(false)}
-                  className="btn-bc btn-cta-primary btn-bc--sm w-full justify-center"
-                >
-                  {t.nav.signup}
-                </Link>
-              </div>
             </div>
           </nav>
         </>

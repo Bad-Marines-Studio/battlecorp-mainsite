@@ -12,6 +12,7 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Cookies from "@/pages/Cookies";
 import NotFound from "@/pages/NotFound";
+import AuthFlowPage from "@/pages/AuthFlowPage";
 import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS, APP_SEARCH_PARAM_TOKEN } from "@/constants/auth";
 
 // Language guard component - preserves sub-path, search, and hash on redirect
@@ -38,12 +39,22 @@ function AuthRouteRedirect() {
   const searchParams = new URLSearchParams(location.search);
   const action = searchParams.get(APP_SEARCH_PARAM_HOME_KEYS.ACTION) ?? APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN;
   const token = searchParams.get(APP_SEARCH_PARAM_TOKEN);
-  const nextParams = new URLSearchParams();
-  nextParams.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, action);
-  if (token) {
-    nextParams.set(APP_SEARCH_PARAM_TOKEN, token);
+
+  if (action === "password-reset-token") {
+    const nextParams = new URLSearchParams();
+    if (token) nextParams.set(APP_SEARCH_PARAM_TOKEN, token);
+    return <Navigate to={`../reset-password${nextParams.toString() ? `?${nextParams.toString()}` : ""}`} replace />;
   }
 
+  if (action === "email-validation") {
+    const nextParams = new URLSearchParams();
+    if (token) nextParams.set(APP_SEARCH_PARAM_TOKEN, token);
+    return <Navigate to={`../validate-email${nextParams.toString() ? `?${nextParams.toString()}` : ""}`} replace />;
+  }
+
+  const nextParams = new URLSearchParams();
+  nextParams.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, action);
+  if (token) nextParams.set(APP_SEARCH_PARAM_TOKEN, token);
   return <Navigate to={`..?${nextParams.toString()}`} replace />;
 }
 
@@ -77,6 +88,10 @@ function App() {
                   </PublicRoute>
                 }
               />
+
+              {/* Dedicated auth flows */}
+              <Route path="reset-password" element={<AuthFlowPage mode="password-reset-token" />} />
+              <Route path="validate-email" element={<AuthFlowPage mode="email-validation" />} />
 
               {/* Legacy auth redirects */}
               <Route path="login" element={<Navigate to={`../?${APP_SEARCH_PARAM_HOME_KEYS.ACTION}=${APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN}`} replace />} />

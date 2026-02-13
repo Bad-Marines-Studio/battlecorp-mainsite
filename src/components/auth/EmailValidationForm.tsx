@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/i18n";
 import { ApiSingletons } from "@/api/apiSingletons";
 import { Logger } from "@/utils/logger";
-import { APP_SEARCH_PARAM_HOME_ACTIONS, APP_SEARCH_PARAM_HOME_KEYS, APP_SEARCH_PARAM_TOKEN } from "@/constants/auth";
+import {
+    APP_ENABLE_REDIRECTS_ACCOUNT_VALIDATION,
+    APP_SEARCH_PARAM_HOME_ACTIONS,
+    APP_SEARCH_PARAM_HOME_KEYS,
+    APP_SEARCH_PARAM_TOKEN,
+    CLASSIC_REDIRECTION_INTERVAL,
+} from "@/constants/auth";
 
 export function EmailValidationForm() {
-    const { t } = useLanguage();
+    const { t, getLocalizedPath } = useLanguage();
     const emailValidationText = (t.auth as any).emailValidation ?? {};
-    const location = useLocation();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const token = searchParams.get(APP_SEARCH_PARAM_TOKEN);
@@ -18,15 +23,37 @@ export function EmailValidationForm() {
     const [success, setSuccess] = useState(false);
 
     const openAuthAction = (nextAction: string) => {
-        const params = new URLSearchParams(location.search);
+        const params = new URLSearchParams();
         params.set(APP_SEARCH_PARAM_HOME_KEYS.ACTION, nextAction);
         params.delete(APP_SEARCH_PARAM_TOKEN);
-        navigate(`${location.pathname}?${params.toString()}${location.hash}`);
+        navigate(`${getLocalizedPath("/")}?${params.toString()}`, { replace: true });
     };
 
     useEffect(() => {
+        const redirectHome = () => {
+            navigate(getLocalizedPath("/"), { replace: true });
+        };
+
+        const handleValidationDone = () => {
+            setSuccess(true);
+            if (APP_ENABLE_REDIRECTS_ACCOUNT_VALIDATION) {
+                setTimeout(() => {
+                    openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN);
+                }, CLASSIC_REDIRECTION_INTERVAL);
+            }
+        };
+
+        const handleValidationError = (message: string) => {
+            setError(message);
+            if (APP_ENABLE_REDIRECTS_ACCOUNT_VALIDATION) {
+                setTimeout(() => {
+                    redirectHome();
+                }, CLASSIC_REDIRECTION_INTERVAL);
+            }
+        };
+
         if (!token) {
-            setError(emailValidationText.invalidToken ?? "Invalid validation link");
+            handleValidationError(emailValidationText.invalidToken ?? "Invalid validation link");
             setValidating(false);
             return;
         }
@@ -38,24 +65,21 @@ export function EmailValidationForm() {
                     { headers: { SkipAuthRefresh: true } }
                 );
 
-                if (response?.status === 200) {
-                    setSuccess(true);
-                    setTimeout(() => {
-                        openAuthAction(APP_SEARCH_PARAM_HOME_ACTIONS.LOGIN);
-                    }, 2000);
+                if (response?.status === 200 || response?.status === 201) {
+                    handleValidationDone();
                 } else {
-                    setError(emailValidationText.error ?? t.common.error);
+                    handleValidationError(emailValidationText.error ?? t.common.error);
                 }
             } catch (err: any) {
                 Logger.error("Email validation error:", err);
-                setError(emailValidationText.invalidToken ?? "Invalid validation link");
+                handleValidationError(emailValidationText.invalidToken ?? "Invalid validation link");
             } finally {
                 setValidating(false);
             }
         };
 
         validateEmail();
-    }, [token, emailValidationText.error, emailValidationText.invalidToken, navigate, location.search, location.pathname, location.hash, t.common.error]);
+    }, [token, emailValidationText.error, emailValidationText.invalidToken, t.common.error, navigate, getLocalizedPath]);
 
     if (validating) {
         return (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { useLanguage } from '@/i18n';
 import { authController } from '@/api/controllers/authController';
 import { ApiSingletons } from '@/api/apiSingletons';
@@ -96,14 +97,14 @@ export function LoginForm({
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-                <div className="p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-200 text-sm">
+                <div className="rounded-md border border-red-700/60 bg-red-900/20 p-3 text-sm text-red-200">
                     {error}
                 </div>
             )}
 
             <div>
-                <label htmlFor="loginOrEmail" className="block text-sm font-medium mb-2">
-                    {t.auth.login.email}
+                <label htmlFor="loginOrEmail" className="mb-2 block text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    {t.auth.login.usernameOrEmail ?? t.auth.login.email}
                 </label>
                 <input
                     id="loginOrEmail"
@@ -111,14 +112,14 @@ export function LoginForm({
                     type="text"
                     value={formData.loginOrEmail}
                     onChange={handleChange}
-                    placeholder={t.auth.login.email}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:border-primary focus:outline-none transition-colors"
+                    placeholder={t.auth.login.usernameOrEmail ?? t.auth.login.email}
+                    className="w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-foreground transition-colors focus:border-primary/60 focus:outline-none"
                     disabled={loading}
                 />
             </div>
 
             <div>
-                <label htmlFor="password" className="block text-sm font-medium mb-2">
+                <label htmlFor="password" className="mb-2 block text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
                     {t.auth.login.password}
                 </label>
                 <div className="relative">
@@ -129,15 +130,16 @@ export function LoginForm({
                         value={formData.password}
                         onChange={handleChange}
                         placeholder={t.auth.login.password}
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:border-primary focus:outline-none transition-colors"
+                        className="w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-foreground transition-colors focus:border-primary/60 focus:outline-none"
                         disabled={loading}
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
-                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                 </div>
             </div>
@@ -145,7 +147,7 @@ export function LoginForm({
             <button
                 type="submit"
                 disabled={!isFormValid || loading}
-                className="w-full py-2 bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+                className="w-full rounded-md border border-primary/40 bg-primary/15 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary transition-colors hover:border-primary/70 hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {loading ? (loginText.loading ?? t.common.loading) : t.auth.login.submit}
             </button>
