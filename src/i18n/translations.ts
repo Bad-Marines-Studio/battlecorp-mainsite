@@ -7,7 +7,30 @@ export type Language = "fr" | "en";
 const LANG_PREFIX_RE = /^\/(fr|en)(?=\/|$)/;
 
 export const VALID_LANGUAGES: Language[] = ["fr", "en"];
-export const defaultLanguage: Language = "fr";
+
+function normalizeLanguageTag(value: string): Language | null {
+  const lowered = value.toLowerCase();
+  if (lowered.startsWith("fr")) return "fr";
+  if (lowered.startsWith("en")) return "en";
+  return null;
+}
+
+function resolveDefaultLanguage(): Language {
+  if (typeof navigator === "undefined") return "en";
+
+  const candidates = Array.isArray(navigator.languages) && navigator.languages.length > 0
+    ? navigator.languages
+    : [navigator.language];
+
+  for (const candidate of candidates) {
+    const normalized = normalizeLanguageTag(candidate);
+    if (normalized) return normalized;
+  }
+
+  return "en";
+}
+
+export const defaultLanguage: Language = resolveDefaultLanguage();
 
 export const translations: Record<Language, TranslationKeys> = {
   fr,

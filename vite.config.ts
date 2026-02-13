@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
     // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
     // https://vitejs.dev/guide/env-and-mode.html#modes
     const env = loadEnv(mode, process.cwd(), '');
-    const appBase = mode === "preprod" ? "/preprod/" : "/";
+    const appBase = mode === "preprod" ? "/react-preprod/" : "/";
 
     return {
         base: appBase,
