@@ -14,6 +14,10 @@ export default defineConfig(({ mode }) => {
 
     return {
         base: appBase,
+        build: {
+            outDir: `dist/${mode}`,
+            emptyOutDir: true,
+        },
         define: {
             'process.env': process.env,
         },
