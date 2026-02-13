@@ -1,5 +1,6 @@
-import { fr, type TranslationKeys } from "./fr";
+import { fr } from "./fr";
 import { en } from "./en";
+import { TranslationKeys } from "./translationKeys";
 
 export type Language = "fr" | "en";
 
@@ -40,11 +41,11 @@ export const translations: Record<Language, TranslationKeys> = {
 export function getLanguageFromPath(pathname: string): Language {
   const segments = pathname.split("/").filter(Boolean);
   const langSegment = segments[0];
-  
+
   if (langSegment && VALID_LANGUAGES.includes(langSegment as Language)) {
     return langSegment as Language;
   }
-  
+
   return defaultLanguage;
 }
 
@@ -52,14 +53,14 @@ export function getLocalizedPath(path: string, language: Language): string {
   // Remove leading slash for processing
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   const segments = cleanPath.split("/").filter(Boolean);
-  
+
   // Check if first segment is a language
   if (segments[0] && VALID_LANGUAGES.includes(segments[0] as Language)) {
     segments[0] = language;
   } else {
     segments.unshift(language);
   }
-  
+
   return "/" + segments.join("/");
 }
 
@@ -72,7 +73,7 @@ export function getSwitchLanguagePath(
   if (LANG_PREFIX_RE.test(currentPath)) {
     return currentPath.replace(LANG_PREFIX_RE, `/${targetLanguage}`);
   }
-  
+
   return `/${targetLanguage}`;
 }
 
