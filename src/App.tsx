@@ -7,6 +7,7 @@ import { PublicRoute } from "@/components/PublicRoute";
 import { AuthProvider } from "@/context/AuthContext";
 import { VALID_LANGUAGES, defaultLanguage, type Language } from "@/i18n";
 import Home from "@/pages/Home";
+import AppPlaceholder from "@/pages/AppPlaceholder";
 import GamePlayPage from "@/pages/GamePlayPage";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
@@ -107,6 +108,14 @@ function App() {
 
               {/* App placeholder - Protected */}
               <Route
+                path="game"
+                element={
+                  <PrivateRoute>
+                    <AppPlaceholder />
+                  </PrivateRoute>
+                }
+              />
+              <Route
                 path="game/play"
                 element={
                   <PrivateRoute>
@@ -116,9 +125,9 @@ function App() {
               />
               <Route
                 path="app"
-                element={<Navigate to="../game/play" replace />}
+                element={<Navigate to="../game" replace />}
               />
-              <Route path="dashboard" element={<Navigate to="../game/play" replace />} />
+              <Route path="dashboard" element={<Navigate to="../game" replace />} />
 
               {/* Legal pages */}
               <Route path="terms" element={<Terms />} />

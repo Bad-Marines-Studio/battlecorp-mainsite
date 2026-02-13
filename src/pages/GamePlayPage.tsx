@@ -68,22 +68,22 @@ export default function GamePlayPage() {
 
   if (import.meta.env.DEV) {
     return (
-      <section className="min-h-[calc(100vh-64px)] p-4 md:p-6">
-        <div className="mb-3 text-sm text-muted-foreground">
+      <section className="h-[calc(100vh-56px)] w-full overflow-hidden p-2 md:p-3">
+        <div className="mb-2 text-xs text-muted-foreground">
           Dev mode iframe placeholder ({language.toUpperCase()})
         </div>
         <iframe
           title="Battlecorp Game Dev Placeholder"
           src={devIframeUrl}
-          className="h-[calc(100vh-120px)] w-full rounded-lg border border-border bg-card"
+          className="h-[calc(100%-1.5rem)] w-full rounded-lg border border-border bg-card"
         />
       </section>
     );
   }
 
   return (
-    <section className="min-h-[calc(100vh-64px)] p-4 md:p-6">
-      <div className="mx-auto max-w-3xl rounded-lg border border-border bg-card p-6">
+    <section className="h-[calc(100vh-56px)] w-full overflow-hidden p-2 md:p-3">
+      <div className="h-full w-full rounded-lg border border-border bg-card p-6">
         <h1 className="mb-3 text-xl font-semibold">Game Runtime Config</h1>
         <p className="mb-4 text-sm text-muted-foreground">
           Active version source: <code>{activeVersionUrl}</code>
@@ -106,4 +106,3 @@ export default function GamePlayPage() {
     </section>
   );
 }
-

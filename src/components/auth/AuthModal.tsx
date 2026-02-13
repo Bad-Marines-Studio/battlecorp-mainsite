@@ -71,7 +71,7 @@ export function AuthModal() {
 
   useEffect(() => {
     if (!authenticated || !isOpen) return;
-    navigate(getLocalizedPath("/game/play"), { replace: true });
+    navigate(getLocalizedPath("/game"), { replace: true });
   }, [authenticated, isOpen, navigate, getLocalizedPath]);
 
   if (!isOpen || !action) return null;
@@ -81,7 +81,7 @@ export function AuthModal() {
   const passwordResetText = authAny.passwordReset ?? {};
 
   const handleLoginSuccess = () => {
-    navigate(getLocalizedPath("/game/play"), { replace: true });
+    navigate(getLocalizedPath("/game"), { replace: true });
   };
 
   let title = t.auth.login.title;

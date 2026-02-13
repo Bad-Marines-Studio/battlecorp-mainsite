@@ -113,7 +113,7 @@ function ConnectedHero({
 
           <div className="flex justify-center mb-6">
             <Link
-              to={`/${language}/app#how-to-play`}
+              to={`/${language}/game/play`}
               className="btn-bc btn-cta-primary btn-bc--lg"
               data-ui-sound="play"
             >

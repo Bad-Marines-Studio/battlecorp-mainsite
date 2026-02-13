@@ -15,7 +15,7 @@ export function PublicRoute({ children }: PublicRouteProps) {
     const { getLocalizedPath } = useLanguage();
 
     if (authenticated) {
-        return <Navigate to={getLocalizedPath('/game/play')} replace />;
+        return <Navigate to={getLocalizedPath('/game')} replace />;
     }
 
     return <>{children}</>;
