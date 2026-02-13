@@ -3,6 +3,7 @@ import { authController } from '@/api/controllers/authController';
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/i18n';
 import { UserProfileModal } from './UserProfileModal';
+import { Logger } from '@/utils/logger';
 
 export function AccountLoggedIn() {
     const { user } = useAuth();
@@ -24,6 +25,24 @@ export function AccountLoggedIn() {
     };
 
     const displayName = user?.username || user?.email || 'Commander';
+
+    useEffect(() => {
+        if (!user) {
+            delete (window as any).__BCWebGLAuth;
+            return;
+        }
+
+        (window as any).__BCWebGLAuth = {
+            getFreshToken: async () => {
+                Logger.verbose('Refresh auth called from unity');
+                return await authController.refreshAuth();
+            },
+        };
+
+        return () => {
+            delete (window as any).__BCWebGLAuth;
+        };
+    }, [user]);
 
     useEffect(() => {
         if (!isOpen) return;
