@@ -10,17 +10,17 @@ import { AuthModal } from "@/components/auth/AuthModal";
 export function Layout() {
   useUiButtonSounds();
   const location = useLocation();
-  const isGameRoute = /^\/[^/]+\/game(\/|$)/.test(location.pathname);
+  const isGamePlayRoute = /^\/[^/]+\/game\/play(\/|$)/.test(location.pathname);
 
   return (
     <LanguageProvider>
       <ScrollToTop />
       <div className="flex min-h-screen flex-col">
-        {isGameRoute ? <GameHeader /> : <Header />}
-        <main role="main" className={`flex-1 ${isGameRoute ? "pt-14" : "pt-16"}`}>
+        {isGamePlayRoute ? <GameHeader /> : <Header />}
+        <main role="main" className={`flex-1 ${isGamePlayRoute ? "pt-14" : "pt-16"}`}>
           <Outlet />
         </main>
-        {!isGameRoute && <Footer />}
+        {!isGamePlayRoute && <Footer />}
         <AuthModal />
       </div>
     </LanguageProvider>

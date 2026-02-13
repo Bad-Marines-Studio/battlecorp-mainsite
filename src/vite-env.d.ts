@@ -12,6 +12,7 @@ interface ImportMetaEnv {
     readonly VITE_ROUTE_PATH_GAME: string;
     readonly VITE_ROUTE_PATH_GAME_PLAY: string;
     readonly VITE_GAME_DEV_IFRAME_URL?: string;
+    readonly VITE_UNITY_ACTIVE_VERSION_URL?: string;
 }
 
 interface ImportMeta {

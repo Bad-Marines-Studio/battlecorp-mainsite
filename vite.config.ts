@@ -23,6 +23,13 @@ export default defineConfig(({ mode }) => {
             hmr: {
                 overlay: false,
             },
+            proxy: {
+                "/utest": {
+                    target: "https://battlecorp.com",
+                    changeOrigin: true,
+                    secure: true,
+                },
+            },
         },
         plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
         resolve: {
