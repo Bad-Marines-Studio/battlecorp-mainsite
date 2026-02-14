@@ -630,6 +630,27 @@ export function UnitsSection() {
                       : currentUnit.ability)
                   : section.sections.none}
               </p>
+
+              <div className="mt-5 pt-4 border-t border-border/70 space-y-3">
+                <div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-primary/90 block mb-1">
+                    {section.sections.strengths}
+                  </span>
+                  <p className="text-sm text-foreground/90">{currentUnit.tactical.strengths}</p>
+                </div>
+                <div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-primary/90 block mb-1">
+                    {section.sections.weaknesses}
+                  </span>
+                  <p className="text-sm text-foreground/90">{currentUnit.tactical.weaknesses}</p>
+                </div>
+                <div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-primary/90 block mb-1">
+                    {section.sections.usage}
+                  </span>
+                  <p className="text-sm text-foreground/90">{currentUnit.tactical.usage}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
