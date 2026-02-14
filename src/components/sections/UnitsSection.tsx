@@ -17,13 +17,13 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 // Import unit images
-import unitMarine from "@/assets/unit-marine.jpg";
-import unitCommando from "@/assets/unit-commando.jpg";
-import unitCyborg from "@/assets/unit-cyborg.jpg";
-import unitTank from "@/assets/unit-tank.jpg";
-import unitArtillery from "@/assets/unit-artillery.jpg";
-import unitBomber from "@/assets/unit-bomber.jpg";
-import unitFighter from "@/assets/unit-fighter.jpg";
+import unitMarine from "@/assets/unit-marine.png";
+import unitCommando from "@/assets/unit-commando.png";
+import unitCyborg from "@/assets/unit-cyborg.png";
+import unitTank from "@/assets/unit-tank.png";
+import unitArtillery from "@/assets/unit-artillery.png";
+import unitBomber from "@/assets/unit-bomber.png";
+import unitFighter from "@/assets/unit-fighter.png";
 
 const unitImages: Record<string, string> = {
   marine: unitMarine,
@@ -371,7 +371,7 @@ export function UnitsSection() {
                             <span className="text-xs font-semibold uppercase tracking-wider text-primary block mb-1">
                               {section.sections.specialAbility}
                             </span>
-                            <span className="text-sm text-foreground">
+                            <span className="text-sm text-orange-500">
                               {unit.ability
                                 ? (unit.ability in section.abilities
                                     ? section.abilities[unit.ability as keyof typeof section.abilities]
@@ -579,7 +579,7 @@ export function UnitsSection() {
               <span className="text-xs font-semibold uppercase tracking-wider text-primary block mb-2">
                 {section.sections.specialAbility}
               </span>
-              <p className="text-sm text-foreground">
+              <p className="text-sm text-orange-500">
                 {currentUnit.ability
                   ? (currentUnit.ability in section.abilities
                       ? section.abilities[currentUnit.ability as keyof typeof section.abilities]
