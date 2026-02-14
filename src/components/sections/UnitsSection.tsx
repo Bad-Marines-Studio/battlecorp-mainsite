@@ -5,7 +5,7 @@ import { useLanguage } from "@/i18n";
 import { Container } from "@/components/Container";
 import { SectionHeader } from "@/components/section/SectionHeader";
 import { Badge } from "@/components/ui/badge";
-import { Swords, Target, Shield, Heart, Factory, Clock, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Swords, Target, Shield, Heart, Factory, Clock, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Carousel,
@@ -24,6 +24,13 @@ import unitTank from "@/assets/unit-tank.png";
 import unitArtillery from "@/assets/unit-artillery.png";
 import unitBomber from "@/assets/unit-bomber.png";
 import unitFighter from "@/assets/unit-fighter.png";
+import unitIconMarine from "@/assets/unit-icon-marine.jpg";
+import unitIconCommando from "@/assets/unit-icon-commando.jpg";
+import unitIconCyborg from "@/assets/unit-icon-cyborg.jpg";
+import unitIconTank from "@/assets/unit-icon-tank.jpg";
+import unitIconArtillery from "@/assets/unit-icon-artillery.jpg";
+import unitIconBomber from "@/assets/unit-icon-bomber.jpg";
+import unitIconFighter from "@/assets/unit-icon-fighter.jpg";
 
 const unitImages: Record<string, string> = {
   marine: unitMarine,
@@ -33,6 +40,17 @@ const unitImages: Record<string, string> = {
   artillery: unitArtillery,
   bomber: unitBomber,
   fighter: unitFighter,
+};
+
+// Unit icon placeholders (replace null with asset path when available)
+const unitIcons: Record<string, string | null> = {
+  marine: unitIconMarine,
+  commando: unitIconCommando,
+  cyborg: unitIconCyborg,
+  tank: unitIconTank,
+  artillery: unitIconArtillery,
+  bomber: unitIconBomber,
+  fighter: unitIconFighter,
 };
 
 // Stat bar component
@@ -113,6 +131,7 @@ export function UnitsSection() {
 
   const currentUnit = section.list[activeUnit];
   const currentImage = unitImages[currentUnit.id] || unitMarine;
+  const currentUnitIcon = unitIcons[currentUnit.id] || null;
 
   // ScrollTrigger entrance animations
   useEffect(() => {
@@ -254,6 +273,7 @@ export function UnitsSection() {
             <CarouselContent className="-ml-2">
               {section.list.map((unit, index) => {
                 const unitImage = unitImages[unit.id] || unitMarine;
+                const unitIcon = unitIcons[unit.id] || null;
                 const isExpanded = expandedCard === index;
                 
                 return (
@@ -267,6 +287,18 @@ export function UnitsSection() {
                           className="w-full h-full object-cover"
                           loading="lazy"
                         />
+                        <div className="absolute bottom-3 right-3 z-10 w-12 h-12 rounded-md border border-primary/60 bg-black/55 backdrop-blur-sm overflow-hidden flex items-center justify-center">
+                          {unitIcon ? (
+                            <img
+                              src={unitIcon}
+                              alt={`${unit.name} icon`}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <ImageIcon className="w-5 h-5 text-primary/80" />
+                          )}
+                        </div>
                         {/* Overlay gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent" />
                       </div>
@@ -480,13 +512,25 @@ export function UnitsSection() {
           {/* Column 2: Image + Production + Costs */}
           <div className="bg-card border border-border rounded-lg overflow-hidden flex flex-col">
             {/* Unit Image */}
-            <div className="aspect-[4/3] overflow-hidden">
+            <div className="aspect-[4/3] overflow-hidden relative">
               <img
                 src={currentImage}
                 alt={currentUnit.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
+              <div className="absolute bottom-3 right-3 w-14 h-14 rounded-md border border-primary/60 bg-black/55 backdrop-blur-sm overflow-hidden flex items-center justify-center">
+                {currentUnitIcon ? (
+                  <img
+                    src={currentUnitIcon}
+                    alt={`${currentUnit.name} icon`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <ImageIcon className="w-6 h-6 text-primary/80" />
+                )}
+              </div>
             </div>
 
             {/* Production */}
