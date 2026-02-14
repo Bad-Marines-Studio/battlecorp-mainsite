@@ -230,7 +230,7 @@ export const fr: TranslationKeys = {
             production: 20,
             fabrication: [{ resource: "credits", amount: 100 }],
             maintenance: [{ resource: "food", amount: 1 }],
-            ability: null,
+            ability: "Tenir. Encaisser. Stabiliser.",
           },
           {
             id: "commando",
@@ -243,7 +243,7 @@ export const fr: TranslationKeys = {
             production: 7,
             fabrication: [{ resource: "credits", amount: 250 }, { resource: "component", amount: 1 }],
             maintenance: [{ resource: "food", amount: 1 }, { resource: "energy", amount: 1 }],
-            ability: "stealthAttack",
+            ability: "Frapper. Percer. Éliminer.",
           },
           {
             id: "cyborg",
@@ -256,7 +256,7 @@ export const fr: TranslationKeys = {
             production: 40,
             fabrication: [{ resource: "credits", amount: 10 }, { resource: "component", amount: 1 }],
             maintenance: [{ resource: "energy", amount: 1 }],
-            ability: null,
+            ability: "Industrialiser. Déployer. Saturer.",
           },
           {
             id: "tank",
@@ -269,7 +269,7 @@ export const fr: TranslationKeys = {
             production: 7,
             fabrication: [{ resource: "credits", amount: 500 }, { resource: "steel", amount: 10 }],
             maintenance: [{ resource: "energy", amount: 5 }],
-            ability: "preMeleeShot",
+            ability: "Avancer. Résister. Riposter.",
           },
           {
             id: "artillery",
@@ -282,7 +282,7 @@ export const fr: TranslationKeys = {
             production: 5,
             fabrication: [{ resource: "credits", amount: 1000 }, { resource: "titanium", amount: 5 }],
             maintenance: [{ resource: "energy", amount: 10 }],
-            ability: "barrage",
+            ability: "Pilonner. Affaiblir. Dominer.",
           },
           {
             id: "bomber",
@@ -295,7 +295,7 @@ export const fr: TranslationKeys = {
             production: 5,
             fabrication: [{ resource: "credits", amount: 500 }, { resource: "aluminum", amount: 5 }, { resource: "steel", amount: 5 }],
             maintenance: [{ resource: "energy", amount: 2 }],
-            ability: "bombing",
+            ability: "Bombarder. Détruire. Fracturer.",
           },
           {
             id: "fighter",
@@ -308,7 +308,7 @@ export const fr: TranslationKeys = {
             production: 10,
             fabrication: [{ resource: "credits", amount: 500 }, { resource: "aluminum", amount: 2 }],
             maintenance: [{ resource: "energy", amount: 1 }],
-            ability: "bombing",
+            ability: "Intercepter. Protéger. Neutraliser.",
           },
         ],
         production: {

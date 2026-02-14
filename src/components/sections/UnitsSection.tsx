@@ -373,7 +373,9 @@ export function UnitsSection() {
                             </span>
                             <span className="text-sm text-foreground">
                               {unit.ability
-                                ? section.abilities[unit.ability as keyof typeof section.abilities]
+                                ? (unit.ability in section.abilities
+                                    ? section.abilities[unit.ability as keyof typeof section.abilities]
+                                    : unit.ability)
                                 : section.sections.none}
                             </span>
                           </div>
@@ -579,7 +581,9 @@ export function UnitsSection() {
               </span>
               <p className="text-sm text-foreground">
                 {currentUnit.ability
-                  ? section.abilities[currentUnit.ability as keyof typeof section.abilities]
+                  ? (currentUnit.ability in section.abilities
+                      ? section.abilities[currentUnit.ability as keyof typeof section.abilities]
+                      : currentUnit.ability)
                   : section.sections.none}
               </p>
             </div>
