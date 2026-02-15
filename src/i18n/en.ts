@@ -230,7 +230,12 @@ export const en: TranslationKeys = {
             production: 20,
             fabrication: [{ resource: "credits", amount: 100 }],
             maintenance: [{ resource: "food", amount: 1 }],
-            ability: null,
+            ability: "Hold. Absorb. Stabilize.",
+            tactical: {
+              strengths: "Low-cost frontline presence.",
+              weaknesses: "Limited damage and no ranged attack.",
+              usage: "Hold lines and absorb pressure while heavier units arrive.",
+            },
           },
           {
             id: "commando",
@@ -243,7 +248,12 @@ export const en: TranslationKeys = {
             production: 7,
             fabrication: [{ resource: "credits", amount: 250 }, { resource: "component", amount: 1 }],
             maintenance: [{ resource: "food", amount: 1 }, { resource: "energy", amount: 1 }],
-            ability: "stealthAttack",
+            ability: "Strike. Breach. Eliminate.",
+            tactical: {
+              strengths: "High melee burst against priority targets.",
+              weaknesses: "Fragile and expensive to sustain.",
+              usage: "Use for breakthroughs and quick eliminations.",
+            },
           },
           {
             id: "cyborg",
@@ -256,7 +266,12 @@ export const en: TranslationKeys = {
             production: 40,
             fabrication: [{ resource: "credits", amount: 10 }, { resource: "component", amount: 1 }],
             maintenance: [{ resource: "energy", amount: 1 }],
-            ability: null,
+            ability: "Cheap. Deploy. Saturate.",
+            tactical: {
+              strengths: "Very fast production and low fabrication cost.",
+              weaknesses: "Average combat impact per unit.",
+              usage: "Mass-produce to saturate fronts and secure territory.",
+            },
           },
           {
             id: "tank",
@@ -269,7 +284,12 @@ export const en: TranslationKeys = {
             production: 7,
             fabrication: [{ resource: "credits", amount: 500 }, { resource: "steel", amount: 10 }],
             maintenance: [{ resource: "energy", amount: 5 }],
-            ability: "preMeleeShot",
+            ability: "Advance. Endure. Retaliate.",
+            tactical: {
+              strengths: "Durable spearhead with strong melee pressure.",
+              weaknesses: "Slow production and high energy upkeep.",
+              usage: "Lead assaults and anchor contested zones.",
+            },
           },
           {
             id: "artillery",
@@ -282,7 +302,12 @@ export const en: TranslationKeys = {
             production: 5,
             fabrication: [{ resource: "credits", amount: 1000 }, { resource: "titanium", amount: 5 }],
             maintenance: [{ resource: "energy", amount: 10 }],
-            ability: "barrage",
+            ability: "Barrage. Weaken. Dominate.",
+            tactical: {
+              strengths: "Extreme ranged damage from safe distance.",
+              weaknesses: "Weak in close combat and fragile when exposed.",
+              usage: "Soften targets before advancing ground forces.",
+            },
           },
           {
             id: "bomber",
@@ -295,7 +320,12 @@ export const en: TranslationKeys = {
             production: 5,
             fabrication: [{ resource: "credits", amount: 500 }, { resource: "aluminum", amount: 5 }, { resource: "steel", amount: 5 }],
             maintenance: [{ resource: "energy", amount: 2 }],
-            ability: "bombing",
+            ability: "Bomb. Devastate. Cripple.",
+            tactical: {
+              strengths: "Strong strike potential on strategic targets.",
+              weaknesses: "Vulnerable if not escorted.",
+              usage: "Disrupt enemy backline and infrastructure.",
+            },
           },
           {
             id: "fighter",
@@ -308,7 +338,12 @@ export const en: TranslationKeys = {
             production: 10,
             fabrication: [{ resource: "credits", amount: 500 }, { resource: "aluminum", amount: 2 }],
             maintenance: [{ resource: "energy", amount: 1 }],
-            ability: "bombing",
+            ability: "Intercept. Protect. Neutralize.",
+            tactical: {
+              strengths: "Balanced air control and interception.",
+              weaknesses: "Lower raw damage than bombers.",
+              usage: "Escort bombers and deny enemy air operations.",
+            },
           },
         ],
         production: {
@@ -332,7 +367,10 @@ export const en: TranslationKeys = {
           characteristics: "Characteristics",
           production: "Production",
           costs: "Costs",
-          specialAbility: "Special Ability",
+          specialAbility: "Special Abilities",
+          strengths: "Strengths",
+          weaknesses: "Weaknesses",
+          usage: "Usages",
           none: "None",
         },
         mobile: {

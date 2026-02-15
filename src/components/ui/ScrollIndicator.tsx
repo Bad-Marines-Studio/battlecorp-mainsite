@@ -11,12 +11,45 @@ export function ScrollIndicator({ className }: ScrollIndicatorProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    const SCROLL_HIDE_THRESHOLD = 140;
+    const MIN_VISIBLE_MS = 2800;
+    const mountedAt = Date.now();
+    let hideTimeout: ReturnType<typeof setTimeout> | null = null;
+
     const handleScroll = () => {
-      setIsVisible(window.scrollY <= 90);
+      const shouldShow = window.scrollY <= SCROLL_HIDE_THRESHOLD;
+
+      if (shouldShow) {
+        if (hideTimeout) {
+          clearTimeout(hideTimeout);
+          hideTimeout = null;
+        }
+        setIsVisible(true);
+        return;
+      }
+
+      const elapsed = Date.now() - mountedAt;
+      const remainingVisibleTime = Math.max(0, MIN_VISIBLE_MS - elapsed);
+      if (remainingVisibleTime === 0) {
+        setIsVisible(false);
+        return;
+      }
+
+      if (!hideTimeout) {
+        hideTimeout = setTimeout(() => {
+          setIsVisible(false);
+          hideTimeout = null;
+        }, remainingVisibleTime);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+      }
+    };
   }, []);
 
   const label = language === "fr" ? "DÉFILER" : "SCROLL";

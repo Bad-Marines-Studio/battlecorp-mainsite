@@ -150,6 +150,11 @@ export interface TranslationKeys {
                     fabrication: { resource: string; amount: number }[];
                     maintenance: { resource: string; amount: number }[];
                     ability: string | null;
+                    tactical: {
+                        strengths: string;
+                        weaknesses: string;
+                        usage: string;
+                    };
                 }[];
                 production: {
                     label: string;
@@ -173,6 +178,9 @@ export interface TranslationKeys {
                     production: string;
                     costs: string;
                     specialAbility: string;
+                    strengths: string;
+                    weaknesses: string;
+                    usage: string;
                     none: string;
                 };
                 mobile: {
