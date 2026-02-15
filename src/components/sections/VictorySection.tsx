@@ -493,7 +493,7 @@ function VictoryCard({ path, isExpanded, onToggle, translations, isMobile = fals
           <h3 className="text-xl font-bold text-foreground mb-2">{path.title}</h3>
 
           {/* Description */}
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
             {path.description}
           </p>
 
