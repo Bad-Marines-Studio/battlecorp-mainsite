@@ -393,7 +393,7 @@ export const fr: TranslationKeys = {
             title: "Victoire militaire",
             tag: "Force & Conquête",
             category: "Force & Conquête",
-            description: "Atteignez et garder les territoires stratégiques pour prendre le contrôle de la planète.",
+            description: "Atteignez et gardez les territoires stratégiques pour prendre le contrôle total de la planète et imposer votre domination sur tous vos adversaires.",
             steps: [
               "Produire une armée puissante",
               "Contrôler les points stratégiques",

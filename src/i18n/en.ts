@@ -393,7 +393,7 @@ export const en: TranslationKeys = {
             title: "Military Victory",
             tag: "Force & Conquest",
             category: "Force & Conquest",
-            description: "Capture and hold strategic territories to take control of the planet.",
+            description: "Reach and hold strategic territories to seize total control of the planet and impose your domination over all your opponents.",
             steps: [
               "Produce a powerful army",
               "Control strategic points",
@@ -419,7 +419,7 @@ export const en: TranslationKeys = {
             title: "Domination Victory",
             tag: "Survival & Elimination",
             category: "Survival & Elimination",
-            description: "Be the last one standing. Survive assaults, eliminate all rivals, and claim the entire planet.",
+            description: "Be the last one standing. Conquer territories, survive the assaults, eliminate all your rivals, and claim the entire planet.",
             steps: [
               "Fortify your key positions",
               "Exhaust enemy resources",
