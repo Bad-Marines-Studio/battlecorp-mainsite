@@ -367,10 +367,10 @@ export const en: TranslationKeys = {
           characteristics: "Characteristics",
           production: "Production",
           costs: "Costs",
-          specialAbility: "Special Ability",
+          specialAbility: "Special Abilities",
           strengths: "Strengths",
           weaknesses: "Weaknesses",
-          usage: "Usage",
+          usage: "Usages",
           none: "None",
         },
         mobile: {
